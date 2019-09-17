@@ -5,11 +5,11 @@
 
 ## Installation
 
-First, ensure pkg-config, ffmpeg, and mplayer are installed.
+First, ensure python, pkg-config, ffmpeg, and mplayer are installed.
 
 On Mac you can use Homebrew:
 
-    brew install pkg-config ffmpeg mplayer
+    brew install python pkg-config ffmpeg mplayer
 
 (Use Chocolatey (choco) on Windows)
 
