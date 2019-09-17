@@ -6,33 +6,39 @@
 ## Running/Developing with Docker
 
 Build the docker container:
+
     ./build
 
-Or
+Or:
+
     docker build -t cosc480-drone .
 
 Run docker container:
+
     ./run
 
-Or
+Or:
+
     docker run -it --rm --network host -v "$PWD":/app cosc480-drone
 
 And if you need, you can run an interactive bash shell in the container:
+
     docker run -it --rm --network host -v "$PWD":/app --entrypoint bash cosc480-drone
 
 ## Manual Method
 
 First, ensure pkg-config, ffmpeg, and mplayer are installed.
 
-On Mac:
-    brew install pkg-config
-    brew install ffmpeg
-    brew install mplayer
+On Mac you can use Homebrew:
 
-Use Chocolate (choco) on Windows
+    brew install pkg-config ffmpeg mplayer
+
+(Use Chocolatey (choco) on Windows)
 
 Install python dependencies:
+
     pip install -r requirements.txt
 
-Run:
+Run the program:
+
     python src/drone.py
