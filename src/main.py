@@ -12,7 +12,7 @@ def handler(event, sender, data, **args):
     print("Drone Data: ", data)
 
 def main():
-  print("Initializing pygame and joystick...")
+  print("Welcome!")
   pygame.init()
   pygame.joystick.init()
 
