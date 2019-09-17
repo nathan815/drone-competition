@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run -it --rm --network host -v "$PWD":/app cosc480-drone
