@@ -19,4 +19,4 @@ Install the python dependencies:
 
 Run the program:
 
-    python src/drone.py
+    python src/main.py
