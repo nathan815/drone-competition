@@ -1,43 +1,30 @@
-from time import sleep
-import tellopy
+from tellopy import Tello
 
-def handler(event, sender, data, **args):
-    drone = sender
-    if event is drone.EVENT_FLIGHT_DATA:
-        print("Drone Data: ", data)
+class TelloDrone(Tello):
+  throttle = 0.0
+  yaw = 0.0
+  pitch = 0.0
+  roll = 0.0
 
-def test():
-    drone = tellopy.Tello()
-    drone.subscribe(drone.EVENT_FLIGHT_DATA, handler)
-    drone.connect()
-    drone.wait_for_connection(60.0)
+  def set_throttle(self, value):
+    self.throttle = self._update(self.throttle, value)
+    super().set_throttle(self.throttle)
 
-    height = 5
-    run = True
+  def set_yaw(self, value):
+    self.yaw = self._update(self.yaw, value)
+    super().set_yaw(self.yaw)
 
+  def set_pitch(self, value):
+    self.pitch = self._update(self.pitch, value)
+    super().set_pitch(self.pitch)
 
-    try:
-        for i in range(0, 3):
-            print("Run  ", i)
-            print("takeoff...")
-            drone.takeoff()
+  def set_roll(self, value):
+    self.roll = self._update(self.roll, value)
+    super().set_roll(self.roll)
 
-            sleep(5)
-            print("up...")
-            drone.up(height)
-
-            sleep(2)
-            print("down...")
-            drone.down(height)
-
-            sleep(1)
-            print("land...")
-            drone.land()
-
-            sleep(5)
-    except Exception as ex:
-        print("Exception: ", ex)
-
-    drone.quit()
-if __name__ == '__main__':
-    test()
+  def _update(self, old, new, max_delta=0.3):
+    if abs(old - new) <= max_delta:
+        res = new
+    else:
+        res = 0.0
+    return res

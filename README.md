@@ -3,29 +3,7 @@
     git clone https://github.com/nathan815/COSC480-Drone
     cd COSC480-Drone
 
-## Running/Developing with Docker
-
-Build the docker container:
-
-    ./build
-
-Or:
-
-    docker build -t cosc480-drone .
-
-Run docker container:
-
-    ./run
-
-Or:
-
-    docker run -it --rm --network host -v "$PWD":/app cosc480-drone
-
-And if you need, you can run an interactive bash shell in the container:
-
-    docker run -it --rm --network host -v "$PWD":/app --entrypoint bash cosc480-drone
-
-## Manual Method
+## Installation
 
 First, ensure pkg-config, ffmpeg, and mplayer are installed.
 
@@ -35,7 +13,7 @@ On Mac you can use Homebrew:
 
 (Use Chocolatey (choco) on Windows)
 
-Install python dependencies:
+Install the python dependencies:
 
     pip install -r requirements.txt
 
