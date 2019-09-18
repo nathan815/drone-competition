@@ -8,6 +8,7 @@ import traceback
 from drone import TelloDrone
 from drone_data import DroneData
 
+
 class Video:
     _drone = None
     _drone_data = None
@@ -53,12 +54,12 @@ class Video:
 
                     if flight_data:
                         self._draw_text(image, 'Flight Data: ' + str(flight_data), 0)
-                    
+
                     if log_data:
                         self._draw_text(image, 'MVO: ' + str(log_data.mvo), -3)
                         self._draw_text(image, ('IMU: ' + str(log_data.imu))[0:52], -2)
                         self._draw_text(image, '     ' + ('IMU: ' + str(log_data.imu))[52:], -1)
-                    
+
                     self._new_image = image
 
                     if frame.time_base < 1.0/60:

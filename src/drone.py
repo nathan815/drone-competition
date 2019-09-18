@@ -1,5 +1,6 @@
 from tellopy import Tello
 
+
 class TelloDrone(Tello):
   throttle = 0.0
   yaw = 0.0
