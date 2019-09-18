@@ -4,11 +4,11 @@ from time import sleep
 
 from drone import TelloDrone
 from drone_data import DroneData
-from joysticks import JoystickButtonHandler, joystick_controller_from_name
 from video import Video
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
+from joysticks import JoystickButtonHandler, joystick_controller_from_name
 
 
 def main():
