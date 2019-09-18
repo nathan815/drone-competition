@@ -50,8 +50,8 @@ def main():
     drone = TelloDrone()
 
     drone_data = DroneData()
-    drone.subscribe(drone.EVENT_FLIGHT_DATA, drone_data.handler)
-    drone.subscribe(drone.EVENT_LOG, drone_data.handler)
+    drone.subscribe(drone.EVENT_FLIGHT_DATA, drone_data.event_handler)
+    drone.subscribe(drone.EVENT_LOG, drone_data.event_handler)
 
     video = Video(drone, drone_data)
 
@@ -68,6 +68,7 @@ def main():
             for e in pygame.event.get():
                 joystick_handler.handle_event(drone, e)
             video.draw()
+            print('Left X', drone.left_x, 'Left Y', drone.left_y, 'Right X', drone.right_x, 'Right Y', drone.right_y)
     finally:
         video.quit()
         drone.land()
