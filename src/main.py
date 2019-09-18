@@ -1,10 +1,11 @@
-from os import environ
 import traceback
+from os import environ
 from time import sleep
+
 from drone import TelloDrone
-from joysticks import JoystickButtonHandler, joystick_mapping_from_name
-from video import Video
 from drone_data import DroneData
+from joysticks import JoystickButtonHandler, joystick_controller_from_name
+from video import Video
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
@@ -18,7 +19,7 @@ def main():
     num_joysticks = pygame.joystick.get_count()
 
     if num_joysticks > 0:
-        print('Joysticks:')
+        print('Available Joysticks:')
     else:
         print("Error: No joysticks detected")
         return
@@ -28,7 +29,7 @@ def main():
     for i in range(0, num_joysticks):
         js = pygame.joystick.Joystick(i)
         joysticks.append(js)
-        print(i, ':', js.get_name())
+        print(i, '-', js.get_name())
 
     if num_joysticks > 1:
         joystick_id = int(input("Select joystick (0-" + str(num_joysticks - 1) + "): "))
@@ -36,15 +37,15 @@ def main():
     joystick = joysticks[joystick_id]
     joystick.init()
     joystick_name = joystick.get_name()
-    print("Joystick Name: ", joystick_name)
+    print("Selected Joystick: ", joystick_id, '-', joystick_name, "\n")
 
-    joystick_mapping = joystick_mapping_from_name(joystick_name)
-    while joystick_mapping is None:
-        print("Controller not recognized. Manually select a controller type.")
-        manual_name = input("Enter mapping (PS3, PS3Alt, PS4, F310, XboxOne, Taranis, FightPad): ")
-        joystick_mapping = joystick_mapping_from_name(manual_name)
+    joystick_controller_mapping = joystick_controller_from_name(joystick_name)
+    while joystick_controller_mapping is None:
+        print("Controller type not recognized.")
+        manual_name = input("Select controller (PS3, PS3Alt, PS4, F310, XboxOne, Taranis, FightPad): ")
+        joystick_controller_mapping = joystick_controller_from_name(manual_name)
 
-    joystick_handler = JoystickButtonHandler(joystick_mapping)
+    joystick_handler = JoystickButtonHandler(joystick_controller_mapping)
 
     drone = TelloDrone()
 
@@ -54,32 +55,30 @@ def main():
 
     video = Video(drone, drone_data)
 
-    print("Connecting to drone...")
-    drone.connect()
-    drone.wait_for_connection(60.0)
-    print("Connected!")
-
-    video.start()
-
     try:
+        video.start()
+
+        print("Connecting to drone...")
+        drone.connect()
+        drone.wait_for_connection(60.0)
+        print("Connected to drone!")
+
         while True:
             sleep(0.01)
             for e in pygame.event.get():
                 joystick_handler.handle_event(drone, e)
-
             video.draw()
-    except KeyboardInterrupt as ex:
-        print("Exiting...")
     finally:
         video.quit()
         drone.land()
         drone.quit()
-        exit(0)
 
 
 if __name__ == '__main__':
     try:
         main()
+    except KeyboardInterrupt as ex:
+        print("Goodbye.")
     except Exception as ex:
-        print("Exception: ", ex)
+        print("Caught Exception:", ex)
         traceback.print_exc()

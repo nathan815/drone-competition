@@ -3,3 +3,4 @@ av
 opencv-python
 image
 pygame
+numpy

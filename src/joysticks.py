@@ -309,7 +309,7 @@ class JoystickButtonHandler:
                 drone.left(0)
 
 
-def joystick_mapping_from_name(name: str):
+def joystick_controller_from_name(name: str):
     controllers = {
         "PS4": JoystickPS4,
         "Wireless Controller": JoystickPS4,

@@ -1,10 +1,12 @@
-from cv2 import cv2
 import sys
 import threading
-import av
-import numpy
 import time
 import traceback
+
+import av
+import numpy
+from cv2 import cv2
+
 from drone import TelloDrone
 from drone_data import DroneData
 
@@ -14,7 +16,8 @@ class Video:
     _drone_data = None
     _current_image = None
     _new_image = None
-    _run_video_thread = True
+    thread = None
+    _is_video_thread_running = True
 
     def __init__(self, drone: TelloDrone, drone_data: DroneData):
         print('VIDEO initializing')
@@ -22,26 +25,25 @@ class Video:
         self._drone_data = drone_data
 
     def start(self):
-        threading.Thread(target=self._video_thread, daemon=True).start()
+        self.thread = threading.Thread(target=self._recv_thread, daemon=True).start()
 
     def quit(self):
         cv2.destroyAllWindows()
-        self._run_video_thread = False
+        self._is_video_thread_running = False
 
     def draw(self):
         if self._new_image is not None and self._current_image is not self._new_image:
-              cv2.imshow('Tello', self._new_image)
-              self._current_image = self._new_image
-              cv2.waitKey(1)
+            cv2.imshow('Tello', self._new_image)
+            self._current_image = self._new_image
+            cv2.waitKey(1)
 
-    def _video_thread(self):
+    def _recv_thread(self):
         print('VIDEO start thread')
-        container = None
         try:
             container = av.open(self._drone.get_video_stream())
             # skip first 300 frames
             frame_skip = 300
-            while self._run_video_thread:
+            while self._is_video_thread_running:
                 for frame in container.decode(video=0):
                     if 0 < frame_skip:
                         frame_skip = frame_skip - 1
@@ -62,11 +64,11 @@ class Video:
 
                     self._new_image = image
 
-                    if frame.time_base < 1.0/60:
-                        time_base = 1.0/60
+                    if frame.time_base < 1.0 / 60:
+                        time_base = 1.0 / 60
                     else:
                         time_base = frame.time_base
-                    frame_skip = int((time.time() - start_time)/time_base)
+                    frame_skip = int((time.time() - start_time) / time_base)
         except Exception as ex:
             print('VIDEO exception:')
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -75,18 +77,17 @@ class Video:
 
         print('VIDEO stop thread')
 
-    def _draw_text(image, text, row):
+    def _draw_text(self, image, text, row):
         font = cv2.FONT_HERSHEY_SIMPLEX
         font_scale = 0.5
         font_size = 24
-        font_color = (255,255,255)
-        bg_color = (0,0,0)
-        d = 2
+        font_color = (255, 255, 255)
+        bg_color = (0, 0, 0)
         height, width = image.shape[:2]
         left_mergin = 10
         if row < 0:
-            pos =  (left_mergin, height + font_size * row + 1)
+            pos = (left_mergin, height + font_size * row + 1)
         else:
-            pos =  (left_mergin, font_size * (row + 1))
+            pos = (left_mergin, font_size * (row + 1))
         cv2.putText(image, text, pos, font, font_scale, bg_color, 6)
         cv2.putText(image, text, pos, font, font_scale, font_color, 1)
