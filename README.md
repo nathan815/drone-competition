@@ -1,7 +1,7 @@
 # COSC 480 Drone Project
 
-    git clone https://github.com/nathan815/COSC480-Drone
-    cd COSC480-Drone
+    git clone https://github.com/nathan815/cosc480-drone
+    cd cosc480-drone
 
 ## Installation
 
@@ -15,8 +15,8 @@ On Mac you can use Homebrew:
 
 Install the python dependencies:
 
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
 
 Run the program:
 
-    python src/main.py
+    python3 src/main.py
