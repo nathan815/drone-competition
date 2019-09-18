@@ -17,9 +17,6 @@ class Video:
     def __init__(self, drone):
         print('VIDEO initialize')
         self._drone = drone
-        img = cv2.imread('/Users/nathan/Dev/cosc480/drone/src/drone.png', cv2.IMREAD_UNCHANGED)
-        cv2.imshow('Tello', img)
-        cv2.waitKey(0)
 
     def main_thread_update(self):
         if self._new_image != None and self._current_image is not self._new_image:
