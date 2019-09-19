@@ -33,8 +33,8 @@ class FightPad(Controller):
     LEFT_X_REVERSE = -1.0
     LEFT_Y_REVERSE = -1.0
     RIGHT_X_REVERSE = 1.0
-    RIGHT_Y_REVERSE = 1.0
-    DEADZONE = 0.0039
+    RIGHT_Y_REVERSE = -1.0
+    DEADZONE = 0.05
 
 
 class JoystickPS3(Controller):
@@ -241,13 +241,13 @@ class JoystickButtonHandler:
             if -self._controller.DEADZONE <= e.value and e.value <= self._controller.DEADZONE:
                 e.value = 0.0
             if e.axis == self._controller.LEFT_Y:
-                drone.set_throttle(e.value * self._controller.LEFT_Y_REVERSE)
+                drone.set_pitch(e.value * self._controller.LEFT_Y_REVERSE)
             elif e.axis == self._controller.LEFT_X:
-                drone.set_yaw(e.value * self._controller.LEFT_X_REVERSE)
+                drone.set_roll(e.value * self._controller.LEFT_X_REVERSE)
             elif e.axis == self._controller.RIGHT_Y:
-                drone.set_pitch(e.value * self._controller.RIGHT_Y_REVERSE)
+                drone.set_throttle(e.value * self._controller.RIGHT_Y_REVERSE)
             elif e.axis == self._controller.RIGHT_X:
-                drone.set_roll(e.value * self._controller.RIGHT_X_REVERSE)
+                drone.set_yaw(e.value * self._controller.RIGHT_X_REVERSE)
 
         elif e.type == pygame.JOYHATMOTION:
             if e.value[0] < 0:

@@ -68,7 +68,7 @@ def main():
             for e in pygame.event.get():
                 joystick_handler.handle_event(drone, e)
             video.draw()
-            print('Left X', drone.left_x, 'Left Y', drone.left_y, 'Right X', drone.right_x, 'Right Y', drone.right_y)
+            #print('Left X', drone.left_x, 'Left Y', drone.left_y, 'Right X', drone.right_x, 'Right Y', drone.right_y)
     finally:
         video.quit()
         drone.land()
