@@ -12,7 +12,6 @@ from joysticks import JoystickButtonHandler, joystick_controller_from_name
 
 
 # Entry Point of Actual Program
-# Called by fly.py and test_flight.py
 def run(pilot = None):
     print("Welcome to Drone Control!")
 
