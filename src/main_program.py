@@ -11,8 +11,14 @@ import pygame
 from joysticks import JoystickButtonHandler, joystick_controller_from_name
 
 
-def main():
+# Entry Point of Actual Program
+# Called by fly.py and test_flight.py
+def run(pilot = None):
     print("Welcome to Drone Control!")
+
+    if pilot:
+        print("\n---\nPilot Info\n" + str(pilot) + "\n---\n")
+
     pygame.init()
     pygame.joystick.init()
 
@@ -49,7 +55,7 @@ def main():
 
     drone = TelloDrone()
 
-    drone_data = DroneData()
+    drone_data = DroneData(pilot)
     drone.subscribe(drone.EVENT_FLIGHT_DATA, drone_data.event_handler)
     drone.subscribe(drone.EVENT_LOG, drone_data.event_handler)
 
@@ -75,11 +81,15 @@ def main():
         drone.quit()
 
 
-if __name__ == '__main__':
+def start_drone_control(pilot = None):
     try:
-        main()
+        run(pilot)
     except KeyboardInterrupt as ex:
         print("Goodbye.")
     except Exception as ex:
         print("Caught Exception:", ex)
         traceback.print_exc()
+
+
+if __name__ == '__main__':
+    start_drone_control()
