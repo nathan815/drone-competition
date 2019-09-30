@@ -7,6 +7,7 @@ PRINT_FLIGHT_DATA = True
 PRINT_LOG_DATA = True
 PRINT_UNKNOWN_EVENTS = True
 
+
 class DroneData:
     _prev_flight_data = None
     flight_data = None
@@ -24,23 +25,22 @@ class DroneData:
         do_print = self.last_print_second != datetime.time.second
         self.last_print_second = datetime.time.second
 
-        if event is drone.EVENT_FLIGHT_DATA:
+        if not do_print:
+            return
+
+        if event is drone.EVENT_FLIGHT_DATA and PRINT_FLIGHT_DATA:
             if self._prev_flight_data != str(data):
                 self._prev_flight_data = str(data)
             self.flight_data = data
-            text_to_print = data
-            do_print = do_print and PRINT_FLIGHT_DATA
+            print_data(data)
 
-        elif event is drone.EVENT_LOG_DATA:
+        elif event is drone.EVENT_LOG_DATA and PRINT_LOG_DATA:
             self.log_data = data
-            text_to_print = data
-            do_print = do_print and PRINT_LOG_DATA
+            print_data('x=',data.mvo.pos_x, 'y=', data.mvo.pos_y, 'z=', data.mvo.pos_z)
 
-        else:
-            text_to_print = 'event="%s" data=%s' % (event.getname(), str(data))
-            do_print = do_print and PRINT_UNKNOWN_EVENTS
+        elif PRINT_UNKNOWN_EVENTS:
+            print_data('event="%s" data=%s' % (event.getname(), str(data)))
 
-        if do_print:
-            pilot_data = str(self.pilot) if self.pilot else ""
-            print(datetime.datetime.now(), " ", pilot_data, end="  ")
-            print(text_to_print)
+
+def print_data(*args):
+    print(datetime.datetime.now(), " ", *args, end="  ")
