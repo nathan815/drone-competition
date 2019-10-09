@@ -233,7 +233,7 @@ class JoystickButtonHandler:
         self._controller = controller
 
     def handle_event(self, drone: TelloDrone, e):
-        print("Input Event:", e)
+        #print("Input Event:", e)
         speed = 100
 
         if e.type == pygame.JOYAXISMOTION:

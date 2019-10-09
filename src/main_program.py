@@ -12,7 +12,7 @@ from joysticks import JoystickButtonHandler, joystick_controller_from_name
 
 
 # Entry Point of Actual Program
-def run(pilot = None):
+def run(pilot = None, video = True):
     print("Welcome to Drone Control!")
 
     if pilot:
@@ -55,8 +55,8 @@ def run(pilot = None):
     drone = TelloDrone()
 
     drone_data = DroneData(pilot)
-    drone.subscribe(drone.EVENT_FLIGHT_DATA, drone_data.event_handler)
-    drone.subscribe(drone.EVENT_LOG, drone_data.event_handler)
+    #drone.subscribe(drone.EVENT_FLIGHT_DATA, drone_data.event_handler)
+    drone.subscribe(drone.EVENT_LOG_DATA, drone_data.event_handler)
 
     video = Video(drone, drone_data)
 
@@ -73,16 +73,15 @@ def run(pilot = None):
             for e in pygame.event.get():
                 joystick_handler.handle_event(drone, e)
             video.draw()
-            #print('Left X', drone.left_x, 'Left Y', drone.left_y, 'Right X', drone.right_x, 'Right Y', drone.right_y)
     finally:
         video.quit()
         drone.land()
         drone.quit()
 
 
-def start_drone_control(pilot = None):
+def start_drone_control(pilot = None, video = True):
     try:
-        run(pilot)
+        run(pilot, video)
     except KeyboardInterrupt as ex:
         print("Goodbye.")
     except Exception as ex:
