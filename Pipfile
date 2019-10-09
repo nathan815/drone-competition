@@ -1,0 +1,18 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+av = "==6.2.0"
+image = "==1.5.27"
+numpy = "==1.17.2"
+opencv-python = "==4.1.1.26"
+pygame = "==1.9.6"
+tellopy = {git = "git://github.com/hanyazou/TelloPy",ref = "develop-0.7.0"}
+flask = "*"
+
+[requires]
+python_version = "3.7"
