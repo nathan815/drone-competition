@@ -54,8 +54,10 @@ def run(pilot = None, video = True):
 
     drone = TelloDrone()
 
+    drone.set_loglevel(drone.LOG_WARN)
+
     drone_data = DroneData(pilot)
-    #drone.subscribe(drone.EVENT_FLIGHT_DATA, drone_data.event_handler)
+    drone.subscribe(drone.EVENT_FLIGHT_DATA, drone_data.event_handler)
     drone.subscribe(drone.EVENT_LOG_DATA, drone_data.event_handler)
 
     video = Video(drone, drone_data)

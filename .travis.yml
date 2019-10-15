@@ -1,12 +1,21 @@
 language: python
 python:
   - "3.7"
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y python-dev pkg-config libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libswscale-dev libswresample-dev libavfilter-dev ffmpeg mplayer
-  - sudo apt-get clean
-  - sudo apt-get autoclean
+addons:
+  apt:
+    packages:
+      - python-dev
+      - pkg-config
+      - libavformat-dev
+      - libavcodec-dev
+      - libavdevice-dev
+      - libavutil-dev
+      - libswscale-dev
+      - libswresample-dev
+      - libavfilter-dev
+      - ffmpeg
+      - mplayer
 install:
-  - pip install -r requirements.txt
-  - pip install pylint
+  - pip install pipenv pylint
+  - pipenv install
 script: python3 -m pylint --errors-only src/*
