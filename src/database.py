@@ -8,7 +8,7 @@ profile = ExecutionProfile(WhiteListRoundRobinPolicy(['127.0.0.1']),
                            ConsistencyLevel.LOCAL_QUORUM,
                            ConsistencyLevel.LOCAL_SERIAL,
                            15, tuple_factory)
-cluster = Cluster(execution_profiles={EXEC_PROFILE_DEFAULT: profile})
-session = cluster.connect([])
+cluster = Cluster(['my-dse'])
+session = cluster.connect()
 
 print(session.execute("SELECT release_version FROM system.local")[0])

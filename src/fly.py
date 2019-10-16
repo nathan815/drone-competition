@@ -5,7 +5,7 @@ from pilot import Pilot
 
 def fly(args):
     if len(args) == 0:
-        print("Name is required!")
+        print("usage: fly.py \"Name here\" \"Department\" \"Major\"")
         return
 
     name = args[0]
