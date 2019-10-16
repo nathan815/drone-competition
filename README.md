@@ -18,8 +18,12 @@ On Mac you can use Homebrew:
 
 Install the python dependencies:
 
-    pip3 install -r requirements.txt
+    pipenv install
 
 Run the program:
 
-    python3 src/main.py
+    pipenv run python3 src/main.py
+
+Or, you can start a pipenv shell:
+    pipenv shell
+    
