@@ -12,7 +12,8 @@ First, ensure python, pkg-config, ffmpeg, and mplayer are installed.
 
 On Mac you can use Homebrew:
 
-    brew install python pkg-config ffmpeg mplayer
+    brew cask install xquartz
+    brew install pkg-config ffmpeg mplayer
 
 (Use Chocolatey (choco) on Windows)
 
