@@ -11,8 +11,7 @@ import pygame
 from joysticks import JoystickButtonHandler, joystick_controller_from_name
 
 
-# Entry Point of Actual Program
-def run(pilot = None, video = True):
+def run(pilot = None):
     print("Welcome to Drone Control!")
 
     if pilot:
@@ -81,9 +80,9 @@ def run(pilot = None, video = True):
         drone.quit()
 
 
-def start_drone_control(pilot = None, video = True):
+def start(pilot = None):
     try:
-        run(pilot, video)
+        run(pilot)
     except KeyboardInterrupt as ex:
         print("Goodbye.")
     except Exception as ex:
@@ -92,4 +91,4 @@ def start_drone_control(pilot = None, video = True):
 
 
 if __name__ == '__main__':
-    start_drone_control()
+    start()

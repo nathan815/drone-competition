@@ -1,4 +1,4 @@
-from main_program import start_drone_control
+from drone_control import start
 
 if __name__ == '__main__':
-    start_drone_control(video = False)
+    start()

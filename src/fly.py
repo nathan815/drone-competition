@@ -1,5 +1,5 @@
 import sys
-from main_program import start_drone_control
+from drone_control import start
 from pilot import Pilot
 
 
@@ -12,7 +12,7 @@ def fly(args):
     department = args[1] if len(args) > 1 else ''
     major = args[2] if len(args) > 2 else ''
     pilot = Pilot(name, department, major)
-    start_drone_control(pilot)
+    start(pilot)
 
 
 if __name__ == '__main__':
