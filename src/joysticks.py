@@ -222,7 +222,7 @@ class JoystickTaranis(Controller):
     DEADZONE = 0.01
 
 class JoystickButtonHandler:
-    _controller = None
+    _controller: Controller = None
 
     """
     Create new JoystickButtonHandler
@@ -238,7 +238,7 @@ class JoystickButtonHandler:
 
         if e.type == pygame.JOYAXISMOTION:
             # ignore small input values (Deadzone)
-            if -self._controller.DEADZONE <= e.value and e.value <= self._controller.DEADZONE:
+            if -self._controller.DEADZONE <= e.value <= self._controller.DEADZONE:
                 e.value = 0.0
             if e.axis == self._controller.LEFT_Y:
                 drone.set_pitch(e.value * self._controller.LEFT_Y_REVERSE)
