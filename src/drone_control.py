@@ -2,13 +2,13 @@ import traceback
 from os import environ
 from time import sleep
 
-from drone import TelloDrone
-from drone_data import DroneData
-from video import Video
+from .core.drone import TelloDrone
+from .core.drone_data import DroneData
+from .core.video import Video
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
-from joysticks import JoystickButtonHandler, joystick_controller_from_name
+from .core.joysticks import JoystickButtonHandler, joystick_controller_from_name
 
 
 def run(pilot = None):
@@ -64,10 +64,10 @@ def run(pilot = None):
     try:
         video.start()
 
-        print("Connecting to drone...")
+        print("Connecting to core...")
         drone.connect()
         drone.wait_for_connection(60.0)
-        print("Connected to drone!")
+        print("Connected to core!")
 
         while True:
             sleep(0.01)

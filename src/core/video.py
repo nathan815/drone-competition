@@ -7,8 +7,8 @@ import av
 import numpy
 from cv2 import cv2
 
-from drone import TelloDrone
-from drone_data import DroneData
+from .drone import TelloDrone
+from .drone_data import DroneData
 
 
 class Video:

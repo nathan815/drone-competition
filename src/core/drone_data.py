@@ -1,7 +1,6 @@
 import datetime
-
-from drone import TelloDrone
-from pilot import Pilot
+from .drone import TelloDrone
+from .pilot import Pilot
 
 PRINT_PILOT = True
 PRINT_FLIGHT_DATA = False
