@@ -8,22 +8,20 @@
 
 ## Installation
 
-First, ensure python, pkg-config, ffmpeg, and mplayer are installed.
+First, ensure [pipenv](https://pipenv-fork.readthedocs.io/en/latest/), pkg-config, ffmpeg, and mplayer are installed.
 
 On Mac you can use Homebrew:
 
     brew cask install xquartz
-    brew install pkg-config ffmpeg mplayer
+    brew install pipenv pkg-config ffmpeg mplayer
 
-(Use Chocolatey (choco) on Windows)
-
-[Install pipenv](https://pipenv-fork.readthedocs.io/en/latest/).
+Windows uses Chocolatey (choco) but it will be a little different than this.
 
 Install the python dependencies using pipenv:
 
     pipenv install
 
-Run the `fly.py` entrypoint script (or `test_flight.py`) in the virtual environment:
+Finally, run the program using `fly.py` entrypoint script (or `test_flight.py`) in the virtual environment:
 
     pipenv run python src/fly.py
 
