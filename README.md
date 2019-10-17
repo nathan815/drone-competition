@@ -16,14 +16,20 @@ On Mac you can use Homebrew:
 
 (Use Chocolatey (choco) on Windows)
 
-Install the python dependencies:
+[Install pipenv](https://pipenv-fork.readthedocs.io/en/latest/).
+
+Install the python dependencies using pipenv:
 
     pipenv install
 
-Run the program:
+Run the `fly.py` entrypoint script (or `test_flight.py`) in the virtual environment:
 
-    pipenv run python3 src/main.py
+    pipenv run python src/fly.py
 
-Or, you can start a pipenv shell:
+Alternatively, you can start a pipenv shell:
+
     pipenv shell
     
+And then any ocmmands will be ran in the python3 virtual environment, i.e.
+    
+    python src/fly.py
