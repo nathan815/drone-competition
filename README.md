@@ -15,7 +15,7 @@ On Mac you can use Homebrew:
     brew cask install xquartz
     brew install pipenv pkg-config ffmpeg mplayer
 
-Windows uses Chocolatey (choco) but it will be a little different than this.
+On Windows, there is the Chocolatey (choco) package manager which is similar to Homebrew but it will be a little different.
 
 Install the python dependencies using pipenv:
 
