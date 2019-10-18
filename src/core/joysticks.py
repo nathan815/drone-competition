@@ -288,7 +288,7 @@ class JoystickButtonHandler:
             if e.button == self._controller.TAKEOFF:
                 if drone.throttle != 0.0:
                     print('###')
-                    print('### throttle != 0.0 (This may hinder the core from taking off)')
+                    print('### throttle != 0.0 (This may hinder the drone from taking off)')
                     print('###')
                 drone.takeoff()
             elif e.button == self._controller.UP:

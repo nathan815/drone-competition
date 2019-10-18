@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pipenv run python -m src.fly
+pipenv run python -m src.cli.fly

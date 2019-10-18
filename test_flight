@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pipenv run python -m src.test_flight
+pipenv run python -m src.cli.test_flight
