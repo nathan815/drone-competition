@@ -1,7 +1,7 @@
 import traceback
 from os import environ
 
-from ..core.drone_control import DroneControl
+from ..core.flight_control import FlightControl
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
@@ -17,7 +17,7 @@ def run(pilot=None):
     pygame.init()
     pygame.joystick.init()
 
-    drone_control = DroneControl(pilot)
+    flight_control = FlightControl(pilot)
 
     num_joysticks = pygame.joystick.get_count()
 
@@ -48,8 +48,8 @@ def run(pilot=None):
         manual_name = input("Select controller (PS3, PS3Alt, PS4, F310, XboxOne, Taranis, FightPad): ")
         joystick_controller_mapping = joystick_controller_from_name(manual_name)
 
-    drone_control.joystick_handler = JoystickButtonHandler(joystick_controller_mapping)
-    drone_control.start()
+    flight_control.joystick_handler = JoystickButtonHandler(joystick_controller_mapping)
+    flight_control.start()
 
     print('Goodbye.')
 
