@@ -222,11 +222,9 @@ class JoystickTaranis(Controller):
     DEADZONE = 0.01
 
 class JoystickButtonHandler:
-    _controller: Controller = None
-
     """
     Create new JoystickButtonHandler
-    
+
     controller - one of the Controller classes above
     """
     def __init__(self, controller: Controller):

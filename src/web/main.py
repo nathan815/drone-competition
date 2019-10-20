@@ -2,11 +2,11 @@ import os
 from flask import Flask
 from flask.templating import render_template
 
-from .drone_thread import DroneThread
-from .commands import SayHello
+from .drone_event_thread import DroneEventThread
+from .commands import Command, CommandName
 
 app = Flask(__name__)
-drone_thread = DroneThread()
+drone_thread = DroneEventThread()
 
 
 @app.route('/', methods=['GET'])
@@ -16,13 +16,26 @@ def index():
 
 @app.route('/hello/<name>', methods=['GET'])
 def hello(name):
-    drone_thread.send_command(SayHello({'name': name}))
+    drone_thread.send(
+        Command(CommandName.SayHello,
+                {'name': name})
+    )
     return name
 
 
-@app.route('/flights/new', methods=['POST'])
+@app.route('/flights/new', methods=['GET'])
 def create_flight():
-    return 'hi'
+    drone_thread.send(
+        Command(CommandName.StartFlight,
+                {'pilot': {'name': 'Nathan'}})
+    )
+    return ''
+
+
+@app.route('/flights/stop', methods=['GET'])
+def stop_flight():
+    drone_thread.send(Command(CommandName.StopFlight))
+    return ''
 
 
 def has_flask_auto_reload_started():
