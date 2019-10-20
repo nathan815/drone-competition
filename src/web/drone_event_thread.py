@@ -4,7 +4,7 @@ from queue import Queue
 from typing import Optional
 
 from .commands import Command, CommandName
-from ..core.drone_control import DroneControl, FlightAlreadyStartedException
+from ..core.flight_control import FlightControl, FlightAlreadyStartedException
 from ..core.pilot import Pilot
 
 
@@ -13,10 +13,10 @@ class DroneEventThread(threading.Thread):
     def __init__(self):
         self._stop_request = threading.Event()
         self._commands = Queue()
-        self._drone_control: Optional[DroneControl] = None
+        self._drone_control: Optional[FlightControl] = None
         self._runner_thread = None
         self._runner_thread_number = 0
-        super().__init__(daemon=True, name='Drone Thread')
+        super().__init__(daemon=True, name='Drone Event Thread')
 
     def stop(self):
         self._stop_request.set()
@@ -25,8 +25,11 @@ class DroneEventThread(threading.Thread):
     def send(self, command: Command):
         self._commands.put(command)
 
+    def get_video(self):
+        return self._drone_control.video
+
     def run(self):
-        self._drone_control = DroneControl()
+        self._drone_control = FlightControl()
         print('Drone event thread is starting')
         while not self._stop_request.is_set():
             time.sleep(0.01)
