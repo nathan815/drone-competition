@@ -44,18 +44,3 @@ class DroneData:
 
         print(datetime.datetime.now(), " ", *args, end="  ")
         print(self.pilot if self.pilot and PRINT_PILOT else '')
-
-
-class DroneDataHandler:
-    _drone_data: DroneData = None
-
-    def __init__(self, drone_data):
-        self._drone_data = drone_data
-
-    def print(self):
-        pass
-
-
-class PrintDroneDataHandler(DroneDataHandler):
-    def print(self, event, sender: TelloDrone, data):
-        pass

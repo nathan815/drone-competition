@@ -1,17 +1,14 @@
 import traceback
 from os import environ
-from time import sleep
 
-from ..core.drone import TelloDrone
-from ..core.drone_data import DroneData
-from ..core.video import Video
+from ..core.drone_control import DroneControl
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 from ..core.joysticks import JoystickButtonHandler, joystick_controller_from_name
 
 
-def run(pilot = None):
+def run(pilot=None):
     print("Welcome to Drone Control!")
 
     if pilot:
@@ -19,6 +16,8 @@ def run(pilot = None):
 
     pygame.init()
     pygame.joystick.init()
+
+    drone_control = DroneControl(pilot)
 
     num_joysticks = pygame.joystick.get_count()
 
@@ -49,44 +48,16 @@ def run(pilot = None):
         manual_name = input("Select controller (PS3, PS3Alt, PS4, F310, XboxOne, Taranis, FightPad): ")
         joystick_controller_mapping = joystick_controller_from_name(manual_name)
 
-    joystick_handler = JoystickButtonHandler(joystick_controller_mapping)
+    drone_control.joystick_handler = JoystickButtonHandler(joystick_controller_mapping)
+    drone_control.start()
 
-    drone = TelloDrone()
+    print('Goodbye.')
 
-    drone.set_loglevel(drone.LOG_WARN)
-
-    drone_data = DroneData(pilot)
-    drone.subscribe(drone.EVENT_FLIGHT_DATA, drone_data.event_handler)
-    drone.subscribe(drone.EVENT_LOG_DATA, drone_data.event_handler)
-
-    video = Video(drone, drone_data)
-
-    try:
-        video.start()
-
-        print("Connecting to drone...")
-        drone.connect()
-        drone.wait_for_connection(60.0)
-        print("Connected to drone!")
-
-        while True:
-            sleep(0.01)
-            for e in pygame.event.get():
-                joystick_handler.handle_event(drone, e)
-            video.draw()
-    finally:
-        video.quit()
-        drone.land()
-        drone.quit()
-
-
-def start(pilot = None):
+def start(pilot=None):
     try:
         run(pilot)
-    except KeyboardInterrupt as ex:
-        print("Goodbye.")
     except Exception as ex:
-        print("Caught Exception:", ex)
+        print('Caught Exception:', ex)
         traceback.print_exc()
 
 
