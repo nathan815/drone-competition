@@ -2,19 +2,48 @@
 <head>
     <title>Drones!</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.1/css/uikit.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/css/uikit.min.css" />
     <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.1/js/uikit.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.1/js/uikit-icons.min.js"></script>
+    <!-- UIkit CSS -->
+
+    <!-- UIkit JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit-icons.min.js"></script>
+
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+      const socket = io();
+      socket.on('connect', function() {
+        console.log('connected');
+        socket.emit('my event', {data: 'I\'m connected!'});
+      });
+      socket.on('ack', function() {
+        console.log('Hello')
+      });
+      socket.on('disconnect', function() {
+        console.log('disconnected');
+      });
+      function startFlight() {
+        socket.emit('flight.start', {
+          pilot: { name: 'Nathan '}
+        });
+      }
+      function stopFlight() {
+        socket.emit('flight.stop');
+      }
+    </script>
+
 </head>
 <body>
 
 <div class="container">
 
     <div class="screen">
-        Hello
+        <button onclick="startFlight()">Start Flight</button>
+        <button onclick="stopFlight()">Stop Flight</button>
     </div>
 </div>
 

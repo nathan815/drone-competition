@@ -13,7 +13,7 @@ class DroneEventThread(threading.Thread):
     def __init__(self):
         self._stop_request = threading.Event()
         self._commands = Queue()
-        self._drone_control: Optional[FlightControl] = None
+        self._flight_control: Optional[FlightControl] = None
         self._runner_thread = None
         self._runner_thread_number = 0
         super().__init__(daemon=True, name='Drone Event Thread')
@@ -26,10 +26,10 @@ class DroneEventThread(threading.Thread):
         self._commands.put(command)
 
     def get_video(self):
-        return self._drone_control.video
+        return self._flight_control.video
 
     def run(self):
-        self._drone_control = FlightControl()
+        self._flight_control = FlightControl()
         print('Drone event thread is starting')
         while not self._stop_request.is_set():
             time.sleep(0.01)
@@ -54,7 +54,7 @@ class DroneEventThread(threading.Thread):
         print('Hello, ' + command.data['name'])
 
     def _start_flight(self, command: Command):
-        if self._drone_control.running:
+        if self._flight_control.running:
             raise FlightAlreadyStartedException()
         print('Starting flight...')
         pilot_info = command.data['pilot']
@@ -64,12 +64,12 @@ class DroneEventThread(threading.Thread):
                       pilot_info.get('major'),
                       pilot_info.get('school'))
         print('Pilot: ', pilot)
-        self._drone_control.pilot = pilot
-        # execute the drone code in another thread
+        self._flight_control.pilot = pilot
+        # execute the flight drone code in another thread
         # so we don't block our command processing loop
-        name = f'Drone Control Run Thread {self._runner_thread_number}'
+        name = f'Flight Control Run Thread {self._runner_thread_number}'
         self._runner_thread = threading.Thread(
-            target=self._drone_control.start,
+            target=self._flight_control.start,
             name=name,
             daemon=True
         ).start()
@@ -77,4 +77,4 @@ class DroneEventThread(threading.Thread):
 
     def _stop_flight(self, command: Command):
         print('Stop flight...')
-        self._drone_control.stop()
+        self._flight_control.stop()
