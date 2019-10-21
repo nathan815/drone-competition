@@ -15,6 +15,7 @@ tellopy = {git = "git://github.com/hanyazou/TelloPy",ref = "develop-0.7.0"}
 flask = "==1.*"
 dse-driver = "*"
 python-dotenv = "*"
+flask-socketio = "*"
 
 [requires]
 python_version = "3.7"

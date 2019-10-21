@@ -3,42 +3,43 @@ import threading
 
 from flask import Flask, Response
 from flask.templating import render_template
+from flask_socketio import SocketIO
 
-from ..core.video import Video
 from .commands import Command, CommandName
 from .drone_event_thread import DroneEventThread
+from ..core.video import Video
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 drone_thread = DroneEventThread()
 
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def index():
     return render_template('index.html.j2')
 
 
-@app.route('/hello/<name>', methods=['GET'])
+@socketio.on('flight.start')
+def start_flight(data):
+    pilot = data.get('pilot')
+    drone_thread.send(
+        Command(CommandName.StartFlight,
+                {'pilot': pilot})
+    )
+
+
+@socketio.on('flight.stop')
+def stop_flight():
+    drone_thread.send(Command(CommandName.StopFlight))
+
+
+@socketio.on('hello')
 def hello(name):
     drone_thread.send(
         Command(CommandName.SayHello,
                 {'name': name})
     )
     return name
-
-
-@app.route('/flights/new', methods=['GET'])
-def create_flight():
-    drone_thread.send(
-        Command(CommandName.StartFlight,
-                {'pilot': {'name': 'Nathan'}})
-    )
-    return ''
-
-
-@app.route('/flights/stop', methods=['GET'])
-def stop_flight():
-    drone_thread.send(Command(CommandName.StopFlight))
-    return ''
 
 
 @app.route('/video_feed')
@@ -61,7 +62,8 @@ def main():
     # this conditional prevents starting drone thread twice
     if has_flask_auto_reload_started:
         drone_thread.start()
-    app.run(host='localhost', port='8000', debug=True)
+    # app.run(host='localhost', port='8000', debug=True)
+    socketio.run(app, port=8000, debug=True)
     print('Stopping app')
 
 

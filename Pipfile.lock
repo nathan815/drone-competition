@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "72e02ee3151d7713f41c0eb7b80eec04bf545e58958a4c823a8438d6a4104e46"
+            "sha256": "5b621268124243b7374c17caca399b995ae84280418be21140b894098b11c9fa"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -74,6 +74,14 @@
             ],
             "index": "pypi",
             "version": "==1.1.1"
+        },
+        "flask-socketio": {
+            "hashes": [
+                "sha256:2172dff1e42415ba480cee02c30c2fc833671ff326f1598ee3d69aa02cf768ec",
+                "sha256:7ff5b2f5edde23e875a8b0abf868584e5706e11741557449bc5147df2cd78268"
+            ],
+            "index": "pypi",
+            "version": "==4.2.1"
         },
         "geomet": {
             "hashes": [
@@ -264,6 +272,20 @@
             ],
             "index": "pypi",
             "version": "==0.10.3"
+        },
+        "python-engineio": {
+            "hashes": [
+                "sha256:2a4c874aea686e79f8ea9efc30748110df581df6d577d18bb5eaa1a8f2199d12",
+                "sha256:eae09ef72bbb13e66ad0bbe2fbb87271e0ba5e2ec8c6693c6be1e14239564e32"
+            ],
+            "version": "==3.9.3"
+        },
+        "python-socketio": {
+            "hashes": [
+                "sha256:506b2cf7a520b40ea0b3f25e1272eff8de134dce6f471c1f6bc0de8c90fe8c57",
+                "sha256:d4e2c23241afa0aae2a5bcc107523b2fcc71f5020df89a093f3634eb48955967"
+            ],
+            "version": "==4.3.1"
         },
         "pytz": {
             "hashes": [
