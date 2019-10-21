@@ -1,3 +1,4 @@
+import logging
 from os import environ
 from time import sleep
 from typing import Optional
@@ -10,8 +11,12 @@ from .video import Video
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 
+logger = logging.getLogger(__name__)
 
-class FlightAlreadyStartedException(Exception): pass
+
+class FlightAlreadyStartedException(Exception):
+    def __init__(self):
+        super().__init__('Flight is already started')
 
 
 class FlightControl:
@@ -33,7 +38,7 @@ class FlightControl:
         self.running = False
 
     def run(self):
-        print('Drone control run begin')
+        logger.info('Drone control run begin')
 
         self.drone_data = DroneData(self.pilot)
         self.drone.set_loglevel(self.drone.LOG_WARN)
@@ -42,10 +47,10 @@ class FlightControl:
         self.drone.subscribe(self.drone.EVENT_LOG_DATA, self.drone_data.event_handler)
 
         try:
-            print("Connecting to drone...")
+            logger.info("Connecting to drone...")
             self.drone.connect()
             self.drone.wait_for_connection(5)
-            print("Connected to drone!")
+            logger.info("Connected to drone!")
 
             self.video.start()
             while self.running:
@@ -54,10 +59,10 @@ class FlightControl:
                     for event in pygame.event.get():
                         self.joystick_handler.handle_event(self.drone, event)
         except Exception as e:
-            print('Drone control threw exception: ', e)
+            logger.error(f'Drone control threw exception: {e}')
         finally:
             self.video.stop()
             self.drone.land()
             self.drone.quit()
             self.stop()
-            print('Drone control run end')
+            logger.info('Drone control run end')
