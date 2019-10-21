@@ -9,19 +9,10 @@ from flask_socketio import SocketIO
 from .commands import Command, CommandName
 from .event_thread import DroneEventThread
 from ..core.video import Video
+from ..core.pilot import Pilot
+from ..core.logging_setup import *
 
-log_format = '%(asctime)s %(levelname)-8s %(name)-20s %(message)s'
-logging.basicConfig(level=logging.DEBUG,
-                    format=log_format,
-                    datefmt='%a, %d %b %Y %H:%M:%S',
-                    filename='./web.log')
 
-# set up logging to console
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-formatter = logging.Formatter(log_format, datefmt='%H:%M:%S')
-console.setFormatter(formatter)
-logging.getLogger().addHandler(console)
 logger = logging.getLogger(__name__)
 
 logging.getLogger('werkzeug').setLevel(logging.WARNING)
@@ -40,7 +31,11 @@ def index():
 
 @socketio.on('flight.start')
 def start_flight(data):
-    pilot = data.get('pilot')
+    pilot_info = data.get('pilot')
+    pilot = Pilot(pilot_info.get('name'),
+                  pilot_info.get('department'),
+                  pilot_info.get('major'),
+                  pilot_info.get('school'))
     drone_thread.send(
         Command(CommandName.StartFlight,
                 {'pilot': pilot})

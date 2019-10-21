@@ -60,11 +60,7 @@ class DroneEventThread(threading.Thread):
         if self._flight_control.running:
             raise FlightAlreadyStartedException()
         logger.info('Starting flight...')
-        pilot_info = command.data['pilot']
-        pilot = Pilot(pilot_info.get('name'),
-                      pilot_info.get('department'),
-                      pilot_info.get('major'),
-                      pilot_info.get('school'))
+        pilot = command.data['pilot']
         logger.info('Pilot: ' + str(pilot))
         self._flight_control.pilot = pilot
         # execute the flight drone code in another thread
