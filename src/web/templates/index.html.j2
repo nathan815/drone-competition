@@ -4,42 +4,80 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/css/uikit.min.css" />
     <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" />
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit-icons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script type="text/javascript" charset="utf-8">
-      const socket = io();
-      socket.on('connect', function() {
-        console.log('Connected');
-      });
-
-      socket.on('disconnect', function() {
-        console.log('Disconnected');
-      });
-
-      function startFlight() {
-        socket.emit('flight.start', {
-          pilot: { name: 'Nathan' }
-        });
-      }
-
-      function stopFlight() {
-        socket.emit('flight.stop');
-      }
-    </script>
-
 </head>
 <body>
 
 <div class="container">
 
-    <div class="screen">
-        <button onclick="startFlight()">Start Flight</button>
-        <button onclick="stopFlight()">Stop Flight</button>
+    <div class="uk-container">
+        <h1>Flight Control</h1>
+        <div id="start-flight-panel" class="panel">
+            <h2>New Flight</h2>
+            <form id="new-flight">
+                <div class="uk-margin">
+                    <input name="name" class="uk-input" placeholder="Name"/>
+                </div>
+                <div class="uk-margin">
+                    <input name="department" class="uk-input" placeholder="Department"/>
+                </div>
+                <div class="uk-margin">
+                    <input name="major" class="uk-input" placeholder="Major"/>
+                </div>
+                <div class="uk-margin">
+                    <input name="school" class="uk-input" placeholder="School"/>
+                </div>
+                <button type="submit" class="uk-button uk-button-primary">Start Flight</button>
+            </form>
+        </div>
+
+        <div id="flight-status-panel" class="panel">
+            <button type="button" id="stop-flight" class="uk-button uk-button-danger">Stop Flight</button>
+        </div>
     </div>
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.2.0/js/uikit-icons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script type="text/javascript" charset="utf-8">
+  (function() {
+    const socket = io();
+    socket.on('connect', function() {
+      console.log('Connected');
+    });
+
+    socket.on('disconnect', function() {
+      console.log('Disconnected');
+    });
+
+    function startFlight(form) {
+      console.log(form.elements);
+      const data = {};
+      for(let ele of form.elements) {
+        if(ele.name && ele.value) {
+          data[ele.name] = ele.value;
+        }
+      }
+      console.log(data);
+      socket.emit('flight.start', {
+        pilot: data
+      });
+    }
+
+    function stopFlight() {
+      socket.emit('flight.stop');
+    }
+
+    document.getElementById('new-flight').addEventListener('submit', event => {
+      event.preventDefault();
+      startFlight(event.target);
+    });
+
+    document.getElementById('stop-flight').addEventListener('click', stopFlight);
+  })();
+</script>
 
 </body>
 </html>
