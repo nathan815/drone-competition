@@ -15,6 +15,10 @@ VIDEO_FPS = 30
 VIDEO_SLEEP = VIDEO_FPS / 1000
 
 
+class VideoException(Exception):
+    pass
+
+
 class Video:
 
     def __init__(self, drone: TelloDrone, drone_data: DroneData):
@@ -27,7 +31,7 @@ class Video:
 
     def start(self):
         if self._av_container:
-            raise Exception('Video already started')
+            raise VideoException('Video already started')
         self._av_container = av.open(self._drone.get_video_stream())
 
     def start_window_video_thread(self):
@@ -48,13 +52,13 @@ class Video:
             time.sleep(VIDEO_SLEEP)
 
     def generate_frame_jpeg(self) -> bytes:
-        image = self.generate_frame()
-        ret, jpeg = cv2.imencode('.jpg', image)
-        yield jpeg.tobytes()
+        for frame in self.generate_frame():
+            ret, jpeg = cv2.imencode('.jpg', frame)
+            yield jpeg.tobytes()
 
-    def generate_frame(self):
+    def generate_frame(self) -> bytes:
         if not self._av_container:
-            raise Exception('Video not started')
+            raise VideoException('Video not started')
         frame_skip = 300
         for frame in self._av_container.decode(video=0):
             if frame_skip > 0:
@@ -63,16 +67,16 @@ class Video:
             start_time = time.time()
             image = cv2.cvtColor(numpy.array(frame.to_image()), cv2.COLOR_RGB2BGR)
 
-            flight_data = self._drone_data.flight_data
-            log_data = self._drone_data.log_data
-
-            if flight_data:
-                self._draw_text(image, 'Flight Data: ' + str(flight_data), 0)
-
-            if log_data:
-                self._draw_text(image, 'MVO: ' + str(log_data.mvo), -3)
-                self._draw_text(image, ('IMU: ' + str(log_data.imu))[0:52], -2)
-                self._draw_text(image, '     ' + ('IMU: ' + str(log_data.imu))[52:], -1)
+            # flight_data = self._drone_data.flight_data
+            # log_data = self._drone_data.log_data
+            #
+            # if flight_data:
+            #     self._draw_text(image, 'Flight Data: ' + str(flight_data), 0)
+            #
+            # if log_data:
+            #     self._draw_text(image, 'MVO: ' + str(log_data.mvo), -3)
+            #     self._draw_text(image, ('IMU: ' + str(log_data.imu))[0:52], -2)
+            #     self._draw_text(image, '     ' + ('IMU: ' + str(log_data.imu))[52:], -1)
 
             if frame.time_base < 1.0 / 60:
                 time_base = 1.0 / 60
