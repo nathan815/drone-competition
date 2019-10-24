@@ -1,14 +1,17 @@
-from dse import ConsistencyLevel
-from dse.cluster import Cluster, ExecutionProfile, EXEC_PROFILE_DEFAULT
-from dse.policies import WhiteListRoundRobinPolicy, DowngradingConsistencyRetryPolicy
-from dse.query import tuple_factory
+import os
+from dse.auth import PlainTextAuthProvider
+from dse.cluster import Cluster
 
-profile = ExecutionProfile(WhiteListRoundRobinPolicy(['127.0.0.1']),
-                           DowngradingConsistencyRetryPolicy(),
-                           ConsistencyLevel.LOCAL_QUORUM,
-                           ConsistencyLevel.LOCAL_SERIAL,
-                           15, tuple_factory)
-cluster = Cluster(['my-dse'])
+ap = PlainTextAuthProvider(username=os.environ['DSE_USER'], password=os.environ['DSE_PASS'])
+
+ips_file = open('cluster_ips.txt')
+ips = list(map(lambda ele: ele.strip(), ips_file.read().split(",")))
+ips_file.close()
+print('Cluster nodes IPs:', ips)
+
+cluster = Cluster(ips, auth_provider=ap)
 session = cluster.connect()
 
-print(session.execute("SELECT release_version FROM system.local")[0])
+rows = session.execute("SELECT * FROM competition.positional")
+for row in rows:
+    print(row)

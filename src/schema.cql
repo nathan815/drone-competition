@@ -1,6 +1,6 @@
-CREATE KEYSPACE competition WITH replication = {'class':'SimpleStrategy', 'replication_factor':1};
+// Run this CQL on a node in the cluster
 
-CREATE KEYSPACE competition WITH replication = {'class':'NetworkTopologyStrategy', 'replication_factor':3};
+CREATE KEYSPACE competition WITH replication = {'class':'SimpleStrategy', 'replication_factor':3};
 
 USE competition;
 
