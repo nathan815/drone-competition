@@ -13,8 +13,9 @@ addons:
       - libswscale-dev
       - libswresample-dev
       - libavfilter-dev
-      - ffmpeg
       - mplayer
+before_install:
+  - ./travis/travis-install-ffmpeg.sh
 install:
   - pip install pipenv pylint
   - pipenv install
