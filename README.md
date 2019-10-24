@@ -2,14 +2,15 @@
 
 [![Build Status](https://travis-ci.com/nathan815/cosc480-drone.svg?token=Qny2uL81Nn96aTdZPDAH&branch=master)](https://travis-ci.com/nathan815/cosc480-drone)
 
-Authors: Nathan Johnson, Ben Potter
+Authors: Nathan Johnson & Ben Potter
 
 This application uses tellopy to control a drone. It includes a web app to allow the competition volunteer to enter pilot details, start/stop flights, mark flights as valid/invalid, view the live video feed, etc. All flight data is stored in Cassandra in real time. A separate [leaderboard application](https://github.com/nathan815/drone-leaderboard) reads from Cassandra and displays the top pilots and other competition stats. 
 
 This is a semester-long project for COSC 480 Cloud Computing.
 
 ## Technical Info
-* Our Cassandra cluster consists of 3 nodes running on AWS EC2 instances.
+* Drone controlled using tellopy. Commands sent over wifi.
+* The Cassandra cluster consists of 3 nodes running on AWS EC2 instances.
 * The volunteer/flight control web app is built with Flask, flask-socketio, and React.
 * [Pipenv](https://pipenv-fork.readthedocs.io/en/latest/) is used to manage our python depenencies.
 
@@ -40,7 +41,7 @@ This is a semester-long project for COSC 480 Cloud Computing.
        ./fly "Pilot Name" "Department" "Major"
        ./test_flight
 
-## Pipenv stuff 
+## Pipenv 
 You can start a pipenv shell:
 
     pipenv shell
