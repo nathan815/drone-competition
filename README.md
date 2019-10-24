@@ -27,6 +27,8 @@ If you're on macOS, you can use Homebrew:
 
 On Windows, there is the Chocolatey (choco) package manager which is similar to Homebrew but it will be a little different.
 
+Copy .env.example to .env (`cp .env.example .env`) and then fill out database credentials in .env file.
+
 Install the python dependencies using pipenv:
 
     pipenv install
