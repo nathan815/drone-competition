@@ -37,8 +37,8 @@ This is a semester-long project for COSC 480 Cloud Computing.
 
 5. Finally, run the program using `fly` or `test_flight` entrypoint shell scripts:
 
-    ./fly "Pilot Name" "Department" "Major"
-    ./test_flight
+       ./fly "Pilot Name" "Department" "Major"
+       ./test_flight
 
 ## Pipenv stuff 
 You can start a pipenv shell:
