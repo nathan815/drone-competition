@@ -4,7 +4,7 @@
 
 Authors: Nathan Johnson, Ben Potter
 
-This application uses tellopy to control a drone. It includes a web app to allow the competition volunteer to enter pilot details, start/stop flights, mark flights as valid/invalid, view the live video feed, etc. All flight data is stored in Cassandra in real time. A separate leaderboard application reads from Cassandra and displays the top pilots and out analysis. 
+This application uses tellopy to control a drone. It includes a web app to allow the competition volunteer to enter pilot details, start/stop flights, mark flights as valid/invalid, view the live video feed, etc. All flight data is stored in Cassandra in real time. A separate [leaderboard application](https://github.com/nathan815/drone-competition) reads from Cassandra and displays the top pilots and other competition stats. 
 
 This is a semester-long project for COSC 480 Cloud Computing.
 
