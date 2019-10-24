@@ -1,4 +1,3 @@
-import logging
 import os
 import threading
 
@@ -8,10 +7,9 @@ from flask_socketio import SocketIO
 
 from .commands import Command, CommandName
 from .event_thread import DroneEventThread
-from ..core.video import Video
-from ..core.pilot import Pilot
 from ..core.logging_setup import *
-
+from ..core.pilot import Pilot
+from ..core.video import Video, VideoException
 
 logger = logging.getLogger(__name__)
 
@@ -49,18 +47,21 @@ def stop_flight():
 
 @app.route('/video_feed')
 def video_feed():
+
+    def video_feed_frame_generator(video: Video):
+        try:
+            logger.info('Start streaming video feed on thread ' + str(threading.get_ident()))
+            frame_num = 1
+            for frame in video.generate_frame_jpeg():
+                frame_num += 1
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+            logger.info(f'End of video feed ({frame_num} frames) on thread ' + str(threading.get_ident()))
+        except Exception as ex:
+            logger.error('Video stream generator exception: ' + ex.__class__.__name__ + ' - ' + str(ex))
+
     return Response(video_feed_frame_generator(drone_thread.get_video()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
-def video_feed_frame_generator(video: Video):
-    logger.info('Start streaming video feed on thread ' + str(threading.get_ident()))
-    frame_num = 1
-    for frame in video.get_frame_test():
-        frame_num += 1
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-    logger.info(f'End of video feed ({frame_num} frames) on thread ' + str(threading.get_ident()))
 
 
 def main():
