@@ -21,14 +21,20 @@ Install the python dependencies using pipenv:
 
     pipenv install
 
-Finally, run the program using `fly.py` entrypoint script (or `test_flight.py`) in the virtual environment:
+Finally, run the program using `fly` or `test_flight` entrypoint shell scripts:
 
-    pipenv run python src/fly.py
+    ./fly "Pilot Name" "Department" "Major"
+    ./test_flight
 
-Alternatively, you can start a pipenv shell:
+## Pipenv stuff 
+You can start a pipenv shell:
 
     pipenv shell
     
-And then any ocmmands will be ran in the python3 virtual environment, i.e.
+And then any commands will be ran in the context of the python3 virtual environment. 
+
+For example, if you're in the pipenv shell, then
     
-    python src/fly.py
+    python -m src.cli.test_flight
+
+will automatically run on python 3.7 with all needed dependencies, provided you followed the steps above.
