@@ -15,8 +15,8 @@ This is a semester-long project for COSC 480 Cloud Computing.
 
 ## Installation
 
-    git clone https://github.com/nathan815/cosc480-drone
-    cd cosc480-drone
+    git clone https://github.com/nathan815/drone-competition
+    cd drone-competition
 
 1. First, install [pipenv](https://pipenv-fork.readthedocs.io/en/latest/), pkg-config, ffmpeg, and mplayer.
 
