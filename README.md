@@ -18,22 +18,24 @@ This is a semester-long project for COSC 480 Cloud Computing.
     git clone https://github.com/nathan815/cosc480-drone
     cd cosc480-drone
 
-First, install [pipenv](https://pipenv-fork.readthedocs.io/en/latest/), pkg-config, ffmpeg, and mplayer.
+1. First, install [pipenv](https://pipenv-fork.readthedocs.io/en/latest/), pkg-config, ffmpeg, and mplayer.
 
-If you're on macOS, you can use Homebrew:
+   If you're on macOS, you can use Homebrew:
 
-    brew cask install xquartz
-    brew install pipenv pkg-config ffmpeg mplayer
+       brew cask install xquartz
+       brew install pipenv pkg-config ffmpeg mplayer
 
-On Windows, there is the Chocolatey (choco) package manager which is similar to Homebrew but it will be a little different.
+   On Windows, there is the Chocolatey (choco) package manager which is similar to Homebrew but it will be a little different.
 
-Copy .env.example to .env (`cp .env.example .env`) and then fill out database credentials in .env file.
+2. Copy .env.example to .env (`cp .env.example .env`) and then fill out Cassandra DataStax Enterprise cluster credentials in .env file.
 
-Install the python dependencies using pipenv:
+3. Create `cluster_ips.txt` with a comma separated list of the IPs of the nodes in your Cassandra cluster.
 
-    pipenv install
+4. Install the python dependencies using pipenv:
 
-Finally, run the program using `fly` or `test_flight` entrypoint shell scripts:
+       pipenv install
+
+5. Finally, run the program using `fly` or `test_flight` entrypoint shell scripts:
 
     ./fly "Pilot Name" "Department" "Major"
     ./test_flight
