@@ -2,43 +2,46 @@
 
 [![Build Status](https://travis-ci.com/nathan815/cosc480-drone.svg?token=Qny2uL81Nn96aTdZPDAH&branch=master)](https://travis-ci.com/nathan815/cosc480-drone)
 
-Authors: Nathan Johnson, Ben Potter
+Authors: Nathan Johnson & Ben Potter
 
 This application uses tellopy to control a drone. It includes a web app to allow the competition volunteer to enter pilot details, start/stop flights, mark flights as valid/invalid, view the live video feed, etc. All flight data is stored in Cassandra in real time. A separate [leaderboard application](https://github.com/nathan815/drone-leaderboard) reads from Cassandra and displays the top pilots and other competition stats. 
 
 This is a semester-long project for COSC 480 Cloud Computing.
 
 ## Technical Info
-* Our Cassandra cluster consists of 3 nodes running on AWS EC2 instances.
+* Drone controlled using tellopy. Commands sent over wifi.
+* The Cassandra cluster consists of 3 nodes running on AWS EC2 instances.
 * The volunteer/flight control web app is built with Flask, flask-socketio, and React.
 * [Pipenv](https://pipenv-fork.readthedocs.io/en/latest/) is used to manage our python depenencies.
 
 ## Installation
 
-    git clone https://github.com/nathan815/cosc480-drone
-    cd cosc480-drone
+    git clone https://github.com/nathan815/drone-competition
+    cd drone-competition
 
-First, install [pipenv](https://pipenv-fork.readthedocs.io/en/latest/), pkg-config, ffmpeg, and mplayer.
+1. First, install [pipenv](https://pipenv-fork.readthedocs.io/en/latest/), pkg-config, ffmpeg, and mplayer.
 
-If you're on macOS, you can use Homebrew:
+   If you're on macOS, you can use Homebrew:
 
-    brew cask install xquartz
-    brew install pipenv pkg-config ffmpeg mplayer
+       brew cask install xquartz
+       brew install pipenv pkg-config ffmpeg mplayer
 
-On Windows, there is the Chocolatey (choco) package manager which is similar to Homebrew but it will be a little different.
+   On Windows, there is the Chocolatey (choco) package manager which is similar to Homebrew but it will be a little different.
 
-Copy .env.example to .env (`cp .env.example .env`) and then fill out database credentials in .env file.
+2. Copy .env.example to .env (`cp .env.example .env`) and then fill out Cassandra DataStax Enterprise cluster credentials in .env file.
 
-Install the python dependencies using pipenv:
+3. Create `cluster_ips.txt` with a comma separated list of the IPs of the nodes in your Cassandra cluster.
 
-    pipenv install
+4. Install the python dependencies using pipenv:
 
-Finally, run the program using `fly` or `test_flight` entrypoint shell scripts:
+       pipenv install
 
-    ./fly "Pilot Name" "Department" "Major"
-    ./test_flight
+5. Finally, run the program using `fly` or `test_flight` entrypoint shell scripts:
 
-## Pipenv stuff 
+       ./fly "Pilot Name" "Department" "Major"
+       ./test_flight
+
+## Pipenv 
 You can start a pipenv shell:
 
     pipenv shell
