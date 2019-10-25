@@ -76,7 +76,7 @@ class CompetitionDatabase:
             flight_position.flight.pilot.major,
             flight_position.flight.pilot.org_college,
             flight_position.flight.pilot.group,
-            flight_position.valid
+            flight_position.flight.valid
         ])
 
 

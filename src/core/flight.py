@@ -23,7 +23,7 @@ class Flight:
     uuid: UUID
     pilot: Pilot
     station_id: UUID
-    valid: bool
+    valid: bool = True
 
 
 @dataclass
@@ -33,4 +33,3 @@ class FlightPosition:
     x: float
     y: float
     z: float
-    valid: bool = True
