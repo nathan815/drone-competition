@@ -1,6 +1,6 @@
 import sys
 from .drone_control import start
-from ..core.pilot import Pilot
+from ..core.flight import Pilot
 
 
 def fly(args):
@@ -9,9 +9,9 @@ def fly(args):
         return
 
     name = args[0]
-    department = args[1] if len(args) > 1 else ''
-    major = args[2] if len(args) > 2 else ''
-    pilot = Pilot(name, department, major)
+    major = args[2] if len(args) > 1 else ''
+    group = args[1] if len(args) > 2 else ''
+    pilot = Pilot(name, major, Pilot.GroupType(group).name)
     start(pilot)
 
 
