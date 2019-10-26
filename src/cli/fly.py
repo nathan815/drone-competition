@@ -11,8 +11,8 @@ def fly(args):
     name = args[0]
     major = args[1] if len(args) > 1 else ''
     college = args[2] if len(args) > 2 else ''
-    group = args[3] if len(args) > 3 else ''
-    pilot = Pilot(name, major, Pilot.GroupType(group).name, college)
+    group = Pilot.GroupType(args[3]).name if len(args) > 3 else ''
+    pilot = Pilot(name, major, group, college)
     start(pilot)
 
 
