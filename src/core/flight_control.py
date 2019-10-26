@@ -4,7 +4,7 @@ from time import sleep
 from typing import Optional
 from uuid import UUID
 
-from core.database import CompetitionDatabase, cluster_connect
+from .database import CompetitionDatabase, cluster_connect
 from .drone import TelloDrone
 from .drone_data import DroneData
 from .flight import Pilot, Flight
