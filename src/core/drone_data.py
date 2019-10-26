@@ -45,11 +45,11 @@ class DroneData:
             self.print_data('event="%s" data=%s' % (event.getname(), str(data)))
 
     def print_data(self, *args):
-        now = datetime.datetime.now()
+        now = datetime.now()
         second: int = now.second
         if self._last_print_second == second:
             return
         self._last_print_second = second
 
-        print(datetime.datetime.now(), " ", *args, end="  ")
+        print(datetime.now(), " ", *args, end="  ")
         print(self.flight.pilot if self.flight and PRINT_PILOT else '')

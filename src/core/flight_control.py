@@ -35,7 +35,7 @@ class FlightControl:
     def start(self, pilot: Pilot):
         if self.running:
             raise FlightAlreadyStartedException()
-        self.flight = self.competition_db.create_flight(pilot, UUID("1"))
+        self.flight = self.competition_db.create_flight(pilot, UUID("12345678-1234-5678-1234-567812345678"))
         self.running = True
         self.run()
 
@@ -45,7 +45,7 @@ class FlightControl:
     def run(self):
         logger.info('Drone control run begin')
 
-        self.drone_data = DroneData(self.flight)
+        self.drone_data = DroneData(self.flight, self.competition_db)
         self.drone.set_loglevel(self.drone.LOG_WARN)
 
         self.drone.subscribe(self.drone.EVENT_FLIGHT_DATA, self.drone_data.event_handler)

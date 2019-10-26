@@ -49,7 +49,7 @@ def run(pilot=None):
         joystick_controller_mapping = joystick_controller_from_name(manual_name)
 
     flight_control.joystick_handler = JoystickButtonHandler(joystick_controller_mapping)
-    flight_control.start()
+    flight_control.start(pilot)
 
     print('Goodbye.')
 
