@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from core.database import CompetitionDatabase
+from .database import CompetitionDatabase
 from .drone import TelloDrone
 from .flight import Flight, FlightPosition
 
