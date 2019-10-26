@@ -1,6 +1,8 @@
-import datetime
+from datetime import datetime
+
+from core.database import CompetitionDatabase
 from .drone import TelloDrone
-from .pilot import Pilot
+from .flight import Flight, FlightPosition
 
 PRINT_PILOT = True
 PRINT_FLIGHT_DATA = False
@@ -9,14 +11,13 @@ PRINT_UNKNOWN_EVENTS = False
 
 
 class DroneData:
-    _prev_flight_data = None
-    flight_data = None
-    log_data = None
-    pilot: Pilot = None
-    _last_print_second: int = 1
-
-    def __init__(self, pilot: Pilot):
-        self.pilot = pilot
+    def __init__(self, flight: Flight, competition_db: CompetitionDatabase):
+        self.flight = flight
+        self.competition_db = competition_db
+        self._prev_flight_data = None
+        self.flight_data = None
+        self.log_data = None
+        self._last_print_second: int = 1
 
     def event_handler(self, event, sender, data):
         drone: TelloDrone = sender
@@ -27,10 +28,18 @@ class DroneData:
             self.flight_data = data
             self.print_data(data)
 
-        elif event is drone.EVENT_LOG_DATA and PRINT_LOG_DATA:
+        elif event is drone.EVENT_LOG_DATA:
             self.log_data = data
-            # print("EVENT!!!", event, data)
-            self.print_data(data.mvo.pos_x, data.mvo.pos_y, data.mvo.pos_z)
+            flight_pos = FlightPosition(
+                flight=self.flight,
+                ts=datetime.now(),
+                x=data.mvo.pos_x,
+                y=data.mvo.pos_y,
+                z=data.mvo.pos_z
+            )
+            self.competition_db.insert_flight_position(flight_pos)
+            if PRINT_LOG_DATA:
+                self.print_data(data.mvo.pos_x, data.mvo.pos_y, data.mvo.pos_z)
 
         elif PRINT_UNKNOWN_EVENTS:
             self.print_data('event="%s" data=%s' % (event.getname(), str(data)))
@@ -43,4 +52,4 @@ class DroneData:
         self._last_print_second = second
 
         print(datetime.datetime.now(), " ", *args, end="  ")
-        print(self.pilot if self.pilot and PRINT_PILOT else '')
+        print(self.flight.pilot if self.flight and PRINT_PILOT else '')

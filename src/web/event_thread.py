@@ -6,7 +6,6 @@ from typing import Optional
 
 from .commands import Command, CommandName
 from ..core.flight_control import FlightControl, FlightAlreadyStartedException
-from ..core.pilot import Pilot
 
 logger = logging.getLogger(__name__)
 
@@ -62,12 +61,11 @@ class DroneEventThread(threading.Thread):
         logger.info('Starting flight...')
         pilot = command.data['pilot']
         logger.info('Pilot: ' + str(pilot))
-        self._flight_control.pilot = pilot
         # execute the flight drone code in another thread
         # so we don't block our command processing loop
         name = f'Flight Control Run Thread {self._runner_thread_number}'
         self._runner_thread = threading.Thread(
-            target=self._flight_control.start,
+            target=self._flight_control.start(pilot),
             name=name,
             daemon=True
         ).start()

@@ -53,6 +53,7 @@ def run(pilot=None):
 
     print('Goodbye.')
 
+
 def start(pilot=None):
     try:
         run(pilot)

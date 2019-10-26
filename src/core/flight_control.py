@@ -2,10 +2,12 @@ import logging
 from os import environ
 from time import sleep
 from typing import Optional
+from uuid import UUID
 
+from core.database import CompetitionDatabase, cluster_connect
 from .drone import TelloDrone
 from .drone_data import DroneData
-from .pilot import Pilot
+from .flight import Pilot, Flight
 from .video import Video
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -25,12 +27,15 @@ class FlightControl:
         self.joystick_handler = None
         self.drone_data: Optional[DroneData] = None
         self.pilot: Optional[Pilot] = pilot
+        self.flight: Optional[Flight] = None
         self.drone = TelloDrone(port=9001)
         self.video = Video(self.drone, self.drone_data)
+        self.competition_db = CompetitionDatabase(cluster_connect())
 
-    def start(self):
+    def start(self, pilot: Pilot):
         if self.running:
             raise FlightAlreadyStartedException()
+        self.flight = self.competition_db.create_flight(pilot, UUID("1"))
         self.running = True
         self.run()
 
@@ -40,7 +45,7 @@ class FlightControl:
     def run(self):
         logger.info('Drone control run begin')
 
-        self.drone_data = DroneData(self.pilot)
+        self.drone_data = DroneData(self.flight)
         self.drone.set_loglevel(self.drone.LOG_WARN)
 
         self.drone.subscribe(self.drone.EVENT_FLIGHT_DATA, self.drone_data.event_handler)
