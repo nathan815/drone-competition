@@ -1,5 +1,7 @@
 import os
 import threading
+import webbrowser
+import sys
 
 from flask import Flask, Response
 from flask.templating import render_template
@@ -64,14 +66,19 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-def main():
+def main(args):
+    port = args[0] if len(args) > 0 else 8000
     has_flask_auto_reload_started = os.environ.get('WERKZEUG_RUN_MAIN') == 'true'
     # this conditional prevents starting drone thread twice at first run
     if has_flask_auto_reload_started:
         drone_thread.start()
-    socketio.run(app, port=8000, debug=True)
+    else:
+        webbrowser.open(f'http://localhost:{port}', 2)
+    socketio.run(app, port=port, debug=True)
     print('Server stopped')
 
 
 if __name__ == '__main__':
-    main()
+    a = sys.argv.copy()
+    del a[0]
+    main(a)
