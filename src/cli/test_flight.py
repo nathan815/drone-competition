@@ -1,5 +1,5 @@
-from ..core.flight_control import FlightConfig
-from .cli_main import start
+from ..core.flight_config import FlightConfig
+from .cli_main import run
 
 if __name__ == '__main__':
-    start(FlightConfig(db_write_data=False))
+    run(FlightConfig(db_write_data=False))

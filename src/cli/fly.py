@@ -1,8 +1,8 @@
 import sys
 
-from .cli_main import start
+from .cli_main import run
 from ..core.model import Pilot
-from ..core.flight_control import FlightConfig
+from ..core.flight_config import FlightConfig
 
 
 def fly(args):
@@ -15,7 +15,7 @@ def fly(args):
     college = args[2] if len(args) > 2 else ''
     group = Pilot.GroupType(args[3]).name if len(args) > 3 else ''
     pilot = Pilot(name, major, group, college)
-    start(FlightConfig(), pilot)
+    run(FlightConfig(), pilot)
 
 
 if __name__ == '__main__':

@@ -1,14 +1,11 @@
+from typing import Optional
+
 from tellopy import Tello
 from datetime import datetime
 
-from src.core.flight_control import FlightConfig
+from .flight_config import FlightConfig
 from .database import CompetitionDatabase
 from .model import Flight, FlightPosition
-
-PRINT_PILOT = True
-PRINT_FLIGHT_DATA = False
-PRINT_LOG_DATA = True
-PRINT_UNKNOWN_EVENTS = False
 
 
 class TelloDrone(Tello):
@@ -42,7 +39,10 @@ class TelloDrone(Tello):
 
 
 class DroneEventHandler:
-    def __init__(self, flight: Flight, flight_config: FlightConfig, competition_db: CompetitionDatabase):
+    def __init__(self,
+                 flight: Flight,
+                 flight_config: FlightConfig,
+                 competition_db: Optional[CompetitionDatabase] = None):
         self.flight = flight
         self.competition_db = competition_db
         self._prev_flight_data = None
