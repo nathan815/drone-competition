@@ -40,10 +40,8 @@ class CompetitionDatabase:
                 row.valid
             )
 
-    def create_flight(self, pilot: Pilot, station_id: uuid.UUID) -> Flight:
-        id = uuid.uuid1()
+    def insert_new_flight(self, flight: Flight) -> Flight:
         ts = datetime.now()
-        flight = Flight(id, pilot, station_id, True)
         flight_pos = FlightPosition(flight, ts, 0, 0, 0)
         self.insert_flight_position(flight_pos)
         return flight

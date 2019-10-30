@@ -6,10 +6,10 @@ import traceback
 
 import av
 import numpy
-from cv2 import cv2
+import cv2
 
 from .drone import TelloDrone
-from .drone_data import DroneData
+from .drone import DroneEventHandler
 
 VIDEO_FPS = 30
 VIDEO_SLEEP = VIDEO_FPS / 1000
@@ -21,9 +21,9 @@ class VideoException(Exception):
 
 class Video:
 
-    def __init__(self, drone: TelloDrone, drone_data: DroneData):
+    def __init__(self, drone: TelloDrone, drone_events: DroneEventHandler):
         self._drone = drone
-        self._drone_data = drone_data
+        self._drone_events = drone_events
         self._current_image = None
         self._video_thread = None
         self._video_thread_running = False
@@ -96,7 +96,7 @@ class Video:
                 if image is not self._current_image:
                     self._current_image = image
                     cv2.imshow('Drone Camera Feed', image)
-                    cv2.waitKey(1)
+                    cv2.waitKey(0)
         except Exception as ex:
             print('VIDEO exception:')
             exc_type, exc_value, exc_traceback = sys.exc_info()

@@ -4,8 +4,9 @@ import time
 from queue import Queue
 from typing import Optional
 
+from ..core.joysticks import JoystickButtonHandler
 from .commands import Command, CommandName
-from ..core.flight_control import FlightControl, FlightAlreadyStartedException
+from ..core.flight_control import FlightControl, FlightAlreadyStartedException, FlightConfig
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,8 @@ class DroneEventThread(threading.Thread):
         self._flight_control: Optional[FlightControl] = None
         self._runner_thread = None
         self._runner_thread_number = 0
-        super().__init__(daemon=True, name='Drone Event Thread')
+        self._flight_config = FlightConfig(show_video_window=False)
+        super().__init__(daemon=True, name='Web App Drone Event Thread')
 
     def stop(self):
         self._stop_request.set()
@@ -31,12 +33,13 @@ class DroneEventThread(threading.Thread):
         return self._flight_control.video
 
     def run(self):
-        self._flight_control = FlightControl()
         logger.info('Drone event thread is starting')
-        while not self._stop_request.is_set():
-            time.sleep(0.01)
+        self._flight_control = FlightControl(FlightConfig(), JoystickButtonHandler())
+        while not self._stop_request.is_set() and self._flight_control.is_connected():
+            time.sleep(0.1)
             command = self._commands.get(block=True)
             self._handle_command(command)
+        self._flight_control.stop()
         logger.info('Drone event thread is stopping')
 
     def _handle_command(self, command: Command):
@@ -64,11 +67,13 @@ class DroneEventThread(threading.Thread):
         # execute the flight drone code in another thread
         # so we don't block our command processing loop
         name = f'Flight Control Run Thread {self._runner_thread_number}'
+        self._flight_control.flight_config = self._flight_config
         self._runner_thread = threading.Thread(
-            target=self._flight_control.start(pilot),
+            target=self._flight_control.run,
             name=name,
             daemon=True
-        ).start()
+        )
+        self._runner_thread.start()
         self._runner_thread_number += 1
 
     def _stop_flight(self, _: Command):

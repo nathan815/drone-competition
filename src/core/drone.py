@@ -1,4 +1,14 @@
 from tellopy import Tello
+from datetime import datetime
+
+from src.core.flight_control import FlightConfig
+from .database import CompetitionDatabase
+from .model import Flight, FlightPosition
+
+PRINT_PILOT = True
+PRINT_FLIGHT_DATA = False
+PRINT_LOG_DATA = True
+PRINT_UNKNOWN_EVENTS = False
 
 
 class TelloDrone(Tello):
@@ -29,3 +39,55 @@ class TelloDrone(Tello):
         else:
             res = 0.0
         return res
+
+
+class DroneEventHandler:
+    def __init__(self, flight: Flight, flight_config: FlightConfig, competition_db: CompetitionDatabase):
+        self.flight = flight
+        self.competition_db = competition_db
+        self._prev_flight_data = None
+        self.flight_data = None
+        self.flight_config: FlightConfig = flight_config
+        self.log_data = None
+        self._last_print_second: int = 1
+
+    def handler(self, event, sender, data):
+        drone: TelloDrone = sender
+
+        if event is drone.EVENT_FLIGHT_DATA and self.flight_config.print_flight_data:
+            if self._prev_flight_data != str(data):
+                self._prev_flight_data = str(data)
+            self.flight_data = data
+            self.print_data(data)
+
+        elif event is drone.EVENT_LOG_DATA:
+            self.log_data = data
+            flight_pos = FlightPosition(
+                flight=self.flight,
+                ts=datetime.now(),
+                x=data.mvo.pos_x,
+                y=data.mvo.pos_y,
+                z=data.mvo.pos_z
+            )
+
+            if self.flight_config.db_write_data:
+                self.competition_db.insert_flight_position(flight_pos)
+
+            if self.flight_config.print_positional_data:
+                self.print_data(data.mvo.pos_x, data.mvo.pos_y, data.mvo.pos_z)
+
+        elif self.flight_config.print_unknown_events:
+            self.print_data('unknown event="%s" data=%s' % (event.getname(), str(data)))
+
+    def print_data(self, *args):
+        now = datetime.now()
+        second: int = now.second
+        if self._last_print_second == second:
+            return
+        self._last_print_second = second
+
+        print(datetime.now(), ' ', *args, end=' ')
+        if self.flight and self.flight_config.print_pilot_data:
+            print(self.flight.pilot)
+        else:
+            print()
