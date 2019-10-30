@@ -5,7 +5,7 @@ from ..core.flight_control import FlightControl, FlightConfig
 from ..core.joysticks import JoystickButtonHandler, joystick_controller_from_name
 from ..core.logging_setup import *
 
-logging.getLogger('dse').setLevel('FATAL')
+logging.getLogger('dse').setLevel('CRITICAL')
 
 
 def run(config: FlightConfig, pilot=None):
