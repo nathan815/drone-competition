@@ -17,7 +17,7 @@ def run(pilot=None):
     pygame.init()
     pygame.joystick.init()
 
-    flight_control = FlightControl(pilot)
+    flight_control = FlightControl(pilot, show_video_window=True)
 
     num_joysticks = pygame.joystick.get_count()
 

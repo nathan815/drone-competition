@@ -5,38 +5,30 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from dse.auth import PlainTextAuthProvider, AuthProvider
+from dse.auth import PlainTextAuthProvider
 from dse.cluster import Cluster
 from dse.query import PreparedStatement
 from dse.util import uuid_from_time
 
-from .flight import FlightPosition, Flight, Pilot
+from .model import FlightPosition, Flight, Pilot
 
 logger = logging.getLogger(__name__)
 
 
-class DatabaseCluster:
-    def __init__(self, ips: list, auth_provider: AuthProvider):
-        self.cluster = Cluster(contact_points=ips, auth_provider=auth_provider)
-
-    def session(self, keyspace=None):
-        return self.cluster.connect(keyspace)
-
-
-def cluster_connect(cluster_ips_file: str = 'cluster_ips.txt') -> DatabaseCluster:
+def get_cluster(cluster_ips_file: str = 'cluster_ips.txt') -> Cluster:
     auth = PlainTextAuthProvider(username=os.environ['DSE_USER'], password=os.environ['DSE_PASS'])
     with open(cluster_ips_file) as ips_file:
         ips = list(map(lambda ele: ele.strip(), ips_file.read().split(",")))
     logger.info(f'Read cluster nodes IPs from {cluster_ips_file}: {ips}')
-    return DatabaseCluster(ips, auth)
+    return Cluster(contact_points=ips, auth_provider=auth)
 
 
 class CompetitionDatabase:
-    def __init__(self, cluster: DatabaseCluster):
-        self.session = cluster.session('competition')
+    def __init__(self, cluster: Cluster):
+        self.session = cluster.connect('competition')
         self.insert_flight_data_stmt: Optional[PreparedStatement] = None
 
-    def get_flights(self, limit: int = None) -> list:
+    def get_flights(self, limit: int = None) -> iter:
         cql = "select * from competition.positional"
         if limit:
             cql += f" limit {limit}"
@@ -57,6 +49,7 @@ class CompetitionDatabase:
         return flight
 
     def insert_flight_position(self, flight_position: FlightPosition):
+        # prepare the statement once, then we don't have to send the entire query for every insertion
         if not self.insert_flight_data_stmt:
             cql = "insert into competition.positional (" \
                   " flight_id, ts, latest_ts, x, y, z, station_id," \
@@ -81,7 +74,7 @@ class CompetitionDatabase:
 
 
 if __name__ == "__main__":
-    db = CompetitionDatabase(cluster_connect())
+    db = CompetitionDatabase(get_cluster())
     print('All flights:')
     rows = db.get_flights()
     for r in rows:

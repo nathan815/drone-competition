@@ -2,7 +2,7 @@ from datetime import datetime
 
 from .database import CompetitionDatabase
 from .drone import TelloDrone
-from .flight import Flight, FlightPosition
+from .model import Flight, FlightPosition
 
 PRINT_PILOT = True
 PRINT_FLIGHT_DATA = False
