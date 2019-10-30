@@ -2,7 +2,7 @@ import logging
 from os import environ
 from time import sleep
 from typing import Optional
-from uuid import UUID
+import uuid
 
 from .database import CompetitionDatabase, get_cluster
 from .drone import TelloDrone
@@ -36,7 +36,8 @@ class FlightControl:
     def start(self, pilot: Pilot):
         if self.running:
             raise FlightAlreadyStartedException()
-        self.flight = self.competition_db.create_flight(pilot, UUID("12345678-1234-5678-1234-567812345678"))
+        station_id = uuid.uuid3(uuid.NAMESPACE_URL, hex(uuid.getnode()))
+        self.flight = self.competition_db.create_flight(pilot, station_id)
         self.running = True
         self.run()
 

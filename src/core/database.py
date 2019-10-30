@@ -3,7 +3,7 @@ import os
 import time
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
+import uuid
 
 from dse.auth import PlainTextAuthProvider
 from dse.cluster import Cluster
@@ -40,8 +40,8 @@ class CompetitionDatabase:
                 row.valid
             )
 
-    def create_flight(self, pilot: Pilot, station_id: UUID) -> Flight:
-        uuid: UUID = uuid_from_time(time.time())
+    def create_flight(self, pilot: Pilot, station_id: uuid.UUID) -> Flight:
+        uuid = uuid.uuid1()
         ts = datetime.now()
         flight = Flight(uuid, pilot, station_id, True)
         flight_pos = FlightPosition(flight, ts, 0, 0, 0)
