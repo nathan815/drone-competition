@@ -1,6 +1,6 @@
 import sys
-from .drone_control import start
-from ..core.flight import Pilot
+from .cli_main import start
+from ..core.model import Pilot
 
 
 def fly(args):

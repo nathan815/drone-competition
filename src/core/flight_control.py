@@ -4,10 +4,10 @@ from time import sleep
 from typing import Optional
 import uuid
 
-from .database import CompetitionDatabase, cluster_connect
+from .database import CompetitionDatabase, get_cluster
 from .drone import TelloDrone
 from .drone_data import DroneData
-from .flight import Pilot, Flight
+from .model import Pilot, Flight
 from .video import Video
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -22,7 +22,7 @@ class FlightAlreadyStartedException(Exception):
 
 
 class FlightControl:
-    def __init__(self, pilot: Optional[Pilot] = None):
+    def __init__(self, pilot: Optional[Pilot] = None, show_video_window=False):
         self.running = False
         self.joystick_handler = None
         self.drone_data: Optional[DroneData] = None
@@ -30,7 +30,8 @@ class FlightControl:
         self.flight: Optional[Flight] = None
         self.drone = TelloDrone(port=9001)
         self.video = Video(self.drone, self.drone_data)
-        self.competition_db = CompetitionDatabase(cluster_connect())
+        self.competition_db = CompetitionDatabase(get_cluster())
+        self.show_video_window = show_video_window
 
     def start(self, pilot: Pilot):
         if self.running:
@@ -59,6 +60,9 @@ class FlightControl:
             logger.info("Connected to drone!")
 
             self.video.start()
+            if self.show_video_window:
+                self.video.start_window_video_thread()
+
             while self.running:
                 sleep(0.01)
                 if self.joystick_handler:

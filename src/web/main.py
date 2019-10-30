@@ -8,7 +8,7 @@ from flask_socketio import SocketIO
 from .commands import Command, CommandName
 from .event_thread import DroneEventThread
 from ..core.logging_setup import *
-from ..core.flight import Pilot
+from ..core.model import Pilot
 from ..core.video import Video, VideoException
 
 logger = logging.getLogger(__name__)
