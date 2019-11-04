@@ -64,7 +64,7 @@ class DroneEventHandler:
             self.log_data = data
             flight_pos = FlightPosition(
                 flight=self.flight,
-                ts=datetime.now(),
+                ts=datetime.utcnow(),
                 x=data.mvo.pos_x,
                 y=data.mvo.pos_y,
                 z=data.mvo.pos_z
