@@ -30,7 +30,7 @@ This is a semester-long project for COSC 480 Cloud Computing.
 
 2. Copy .env.example to .env (`cp .env.example .env`) and then fill out Cassandra DataStax Enterprise cluster credentials in .env file.
 
-3. Create `cluster_ips.txt` with a comma separated list of the IPs of the nodes in your Cassandra cluster.
+3. Create `ips.txt` with a comma separated list of the IPs of the nodes in your Cassandra cluster.
 
 4. Install the python dependencies using pipenv:
 

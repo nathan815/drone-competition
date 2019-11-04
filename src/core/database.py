@@ -15,7 +15,7 @@ from .model import FlightPosition, Flight, Pilot
 logger = logging.getLogger(__name__)
 
 
-def get_cluster(cluster_ips_file: str = 'cluster_ips.txt') -> Cluster:
+def get_cluster(cluster_ips_file: str = 'ips.txt') -> Cluster:
     auth = PlainTextAuthProvider(username=os.environ['DSE_USER'], password=os.environ['DSE_PASS'])
     with open(cluster_ips_file) as ips_file:
         ips = list(map(lambda ele: ele.strip(), ips_file.read().split(",")))
