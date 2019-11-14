@@ -41,7 +41,7 @@ class CompetitionDatabase:
             )
 
     def insert_new_flight(self, flight: Flight) -> Flight:
-        ts = datetime.now()
+        ts = datetime.utcnow()
         flight_pos = FlightPosition(flight, ts, 0, 0, 0)
         self.insert_flight_position(flight_pos)
         return flight
