@@ -55,7 +55,10 @@ class FlightControl:
         if self.running:
             raise FlightAlreadyStartedException()
 
-        self.flight = Flight(uuid.uuid1(), self.pilot, station_id)
+        if self.flight_config.continue_last_flight:
+            self.flight = self.competition_db.get_most_recent_flight()
+        else:
+            self.flight = Flight(uuid.uuid1(), self.pilot, station_id)
 
         if self.flight_config.db_write_data:
             self.competition_db.insert_new_flight(self.flight)

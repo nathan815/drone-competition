@@ -29,7 +29,7 @@ class CompetitionDatabase:
         self.insert_flight_data_stmt: Optional[PreparedStatement] = None
 
     def get_flights(self, limit: int = None) -> iter:
-        cql = "select * from competition.positional"
+        cql = "select * from competition.positional order by flight_id desc"
         if limit:
             cql += f" limit {limit}"
         for row in self.session.execute(cql):
@@ -39,6 +39,20 @@ class CompetitionDatabase:
                 row.station_id,
                 row.valid
             )
+
+    def get_flight(self, uuid):
+        cql = "select * from competition.positional where flight_id = ?"
+        row = self.session.execute(cql, [uuid]).next()
+        return Flight(row)
+
+    def get_most_recent_flight(self) -> Flight:
+        cql = "select * from competition.postional order by flight_id desc limit 1"
+        row = self.session.execute(cql).next()
+        return Flight(row)
+
+    def delete_flight(self, flight_id):
+        cql = "delete from competition.positional where flight_id = ?"
+        self.session.execute(cql, [flight_id])
 
     def insert_new_flight(self, flight: Flight) -> Flight:
         ts = datetime.utcnow()

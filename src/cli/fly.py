@@ -10,12 +10,15 @@ def fly(args):
         print("usage: fly.py \"Name here\" \"Major\" \"College\" \"Group\"")
         return
 
+    use_last_flight = len(args) > 1 and args[len(args)-1] == 'r'
+
     name = args[0]
     major = args[1] if len(args) > 1 else ''
     college = args[2] if len(args) > 2 else ''
     group = Pilot.GroupType(args[3]).name if len(args) > 3 else ''
+
     pilot = Pilot(name, major, group, college)
-    run(FlightConfig(), pilot)
+    run(FlightConfig(continue_last_flight=use_last_flight), pilot)
 
 
 if __name__ == '__main__':

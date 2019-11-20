@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class FlightConfig:
+    continue_last_flight: bool = True
     show_video_window: bool = True
     db_write_data: bool = True
     print_positional_data: bool = True
