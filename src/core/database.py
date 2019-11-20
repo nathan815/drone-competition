@@ -29,7 +29,7 @@ class CompetitionDatabase:
         self.insert_flight_data_stmt: Optional[PreparedStatement] = None
 
     def get_flights(self, limit: int = None) -> iter:
-        cql = "select * from competition.positional order by flight_id desc"
+        cql = "select * from competition.positional group by flight_id"
         if limit:
             cql += f" limit {limit}"
         for row in self.session.execute(cql):
@@ -40,19 +40,27 @@ class CompetitionDatabase:
                 row.valid
             )
 
-    def get_flight(self, uuid):
-        cql = "select * from competition.positional where flight_id = ?"
-        row = self.session.execute(cql, [uuid]).next()
-        return Flight(row)
+    def get_flight(self, flight_id: uuid.UUID):
+        stmt = self.session.prepare("select * from competition.positional where flight_id = ? group by flight_id")
+        the_row = None
+        for row in self.session.execute(stmt, [flight_id]):
+            the_row = row
+        print(the_row)
+        if the_row:
+            return Flight(row.flight_id, Pilot(row.name, row.major, row.group, row.org_college), row.station_id, row.valid)
 
     def get_most_recent_flight(self) -> Flight:
-        cql = "select * from competition.postional order by flight_id desc limit 1"
-        row = self.session.execute(cql).next()
-        return Flight(row)
+        cql = "select * from competition.positional group by flight_id limit 1"
+        the_row = None
+        for row in self.session.execute(cql):
+            the_row = row
+        print(the_row)
+        if the_row:
+            return Flight(row.flight_id, Pilot(row.name, row.major, row.group, row.org_college), row.station_id, row.valid)
 
     def delete_flight(self, flight_id):
-        cql = "delete from competition.positional where flight_id = ?"
-        self.session.execute(cql, [flight_id])
+        stmt = self.session.prepare("delete from competition.positional where flight_id = ?")
+        self.session.execute(stmt, [flight_id])
 
     def insert_new_flight(self, flight: Flight) -> Flight:
         ts = datetime.utcnow()

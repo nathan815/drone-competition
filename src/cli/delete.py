@@ -1,4 +1,6 @@
 import sys
+from uuid import UUID
+
 from ..core.database import get_cluster, CompetitionDatabase
 
 flight_id_arg = sys.argv[1] if len(sys.argv) > 1 else None
@@ -9,11 +11,11 @@ flight = None
 
 if flight_id_arg:
     flight_id = flight_id_arg
-    flight = db.get_flight(flight_id)
+    flight = db.get_flight(UUID(flight_id))
 else:
     flight = db.get_most_recent_flight()
 
-answer = input(f"Are you sure you want to delete the flight${flight.uuid} by {flight.pilot.name} {flight.pilot.group} {flight.pilot.major}? y/n")
+answer = input(f"Are you sure you want to delete the flight {flight.uuid} by {flight.pilot.name} {flight.pilot.group} {flight.pilot.major}? y/n: ")
 
 if answer.upper() == 'Y' and flight:
     print("Deleting flight...")
