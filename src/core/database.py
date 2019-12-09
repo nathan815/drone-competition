@@ -28,17 +28,20 @@ class CompetitionDatabase:
         self.session = cluster.connect('competition')
         self.insert_flight_data_stmt: Optional[PreparedStatement] = None
 
-    def get_flights(self, limit: int = None) -> iter:
+    def get_recent_flights(self, limit: int = None) -> list:
         cql = "select * from competition.positional group by flight_id"
-        if limit:
-            cql += f" limit {limit}"
+        flights = []
         for row in self.session.execute(cql):
-            yield Flight(
+            flights.append(Flight(
                 row.flight_id,
                 Pilot(row.name, row.major, row.group, row.org_college),
                 row.station_id,
                 row.valid
-            )
+            ))
+        flights.sort(key=lambda flight: flight.latest_ts, reverse=True)
+        if limit:
+            flights = flights[:limit]
+        return flights
 
     def get_flight(self, flight_id: uuid.UUID):
         stmt = self.session.prepare("select * from competition.positional where flight_id = ? group by flight_id")
@@ -47,16 +50,10 @@ class CompetitionDatabase:
             the_row = row
         print(the_row)
         if the_row:
-            return Flight(row.flight_id, Pilot(row.name, row.major, row.group, row.org_college), row.station_id, row.valid)
+            return Flight(the_row.flight_id, Pilot(the_row.name, the_row.major, the_row.group, the_row.org_college), the_row.station_id, the_row.valid)
 
     def get_most_recent_flight(self) -> Flight:
-        cql = "select * from competition.positional group by flight_id limit 1"
-        the_row = None
-        for row in self.session.execute(cql):
-            the_row = row
-        print(the_row)
-        if the_row:
-            return Flight(row.flight_id, Pilot(row.name, row.major, row.group, row.org_college), row.station_id, row.valid)
+        return self.get_recent_flights(1)[0]
 
     def delete_flight(self, flight_id):
         stmt = self.session.prepare("delete from competition.positional where flight_id = ?")
@@ -96,6 +93,6 @@ class CompetitionDatabase:
 if __name__ == "__main__":
     db = CompetitionDatabase(get_cluster())
     print('All flights:')
-    rows = db.get_flights()
+    rows = db.get_recent_flights()
     for r in rows:
         print(r)
