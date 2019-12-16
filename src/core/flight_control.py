@@ -91,15 +91,15 @@ class FlightControl:
 
                 if time.time() - sec > 23:
                     print("setting flight to invalid - id = " + str(self.flight.uuid))
-                    self.competition_db.set_flight_invalid(self.flight.uuid)
+                    self.competition_db.set_flight_invalid_ttl(self.flight.uuid)
                     sec = time.time()
 
                 if self.joystick_handler:
                     for event in pygame.event.get():
                         self.joystick_handler.handle_event(self.drone, event)
-
         except Exception as e:
             logger.error(f'Flight control threw exception: {e}')
         finally:
             self.stop()
             logger.info('Flight control run ended')
+

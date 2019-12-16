@@ -11,6 +11,7 @@ logging.getLogger('dse').setLevel('CRITICAL')
 def run(config: FlightConfig, pilot=None):
 
     flight_control = None
+    is_keyboard_exit = False
     try:
         print('Welcome to Drone Control!')
 
@@ -57,10 +58,18 @@ def run(config: FlightConfig, pilot=None):
         print('\n -- Stack Trace -- \n')
         traceback.print_exc()
         print('\n')
+
     except KeyboardInterrupt:
-        pass
+        is_keyboard_exit = True
+
     finally:
         if flight_control:
             flight_control.stop()
+
+        if is_keyboard_exit:
+            answer = input("Do you want to set this flight to valid? (y/n): ")
+            if answer.lower() == "y":
+                flight_control.competition_db.set_flight_valid(flight_control.flight.uuid)
+                print("Set flight " + str(flight_control.flight.uuid) + " to valid")
 
         print('MAIN THREAD EXITED')

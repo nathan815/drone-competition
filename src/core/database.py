@@ -88,8 +88,12 @@ class CompetitionDatabase:
             flight_position.flight.pilot.group
         ])
 
-    def set_flight_invalid(self, flight_id):
+    def set_flight_invalid_ttl(self, flight_id):
         stmt = self.session.prepare("UPDATE positional USING TTL 25 SET valid=false WHERE flight_id = ?")
+        self.session.execute(stmt, [flight_id])
+
+    def set_flight_valid(self, flight_id):
+        stmt = self.session.prepare("UPDATE positional SET valid=true WHERE flight_id = ?")
         self.session.execute(stmt, [flight_id])
 
 
