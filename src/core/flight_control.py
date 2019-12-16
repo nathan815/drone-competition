@@ -1,5 +1,6 @@
 import logging
 from time import sleep
+import time
 from typing import Optional
 import uuid
 import pygame
@@ -83,9 +84,16 @@ class FlightControl:
             if self.flight_config.show_video_window:
                 self.video.start_window_video_thread()
 
+            sec = time.time()
             # main loop
             while self.running:
                 sleep(0.01)
+
+                if time.time() - sec > 23:
+                    print("setting flight to invalid - id = " + str(self.flight.uuid))
+                    self.competition_db.set_flight_invalid(self.flight.uuid)
+                    sec = time.time()
+
                 if self.joystick_handler:
                     for event in pygame.event.get():
                         self.joystick_handler.handle_event(self.drone, event)

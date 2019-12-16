@@ -70,8 +70,8 @@ class CompetitionDatabase:
         if not self.insert_flight_data_stmt:
             cql = "insert into competition.positional (" \
                   " flight_id, ts, latest_ts, x, y, z, station_id," \
-                  " name, major, org_college, group, num_crashes, valid" \
-                  ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)"
+                  " name, major, org_college, group, num_crashes" \
+                  ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)"
             self.insert_flight_data_stmt = self.session.prepare(cql)
 
         return self.session.execute(self.insert_flight_data_stmt, [
@@ -85,9 +85,12 @@ class CompetitionDatabase:
             flight_position.flight.pilot.name,
             flight_position.flight.pilot.major,
             flight_position.flight.pilot.org_college,
-            flight_position.flight.pilot.group,
-            flight_position.flight.valid
+            flight_position.flight.pilot.group
         ])
+
+    def set_flight_invalid(self, flight_id):
+        stmt = self.session.prepare("UPDATE positional USING TTL 25 SET valid=false WHERE flight_id = ?")
+        self.session.execute(stmt, [flight_id])
 
 
 if __name__ == "__main__":
