@@ -9,7 +9,7 @@ verify_ssl = true
 av = "==6.2.*"
 image = "==1.5.*"
 numpy = "==1.17.*"
-opencv-python = "==4.1.*"
+opencv-python = "==4.2.*"
 pygame = "==1.9.*"
 tellopy = {git = "git://github.com/hanyazou/TelloPy",ref = "develop-0.7.0"}
 flask = "==1.*"
